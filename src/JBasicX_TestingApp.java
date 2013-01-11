@@ -41,6 +41,9 @@ public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
     }
 
     public void gameMenu() {
+        if ((this.keys.isKeyDown(KeyEvent.VK_M) || this.keys.isKeyDown(KeyEvent.VK_ESCAPE))) {
+            this.setGameStatus(gamerunning);
+        }
     }
 
     public void gameUpdate() {
@@ -63,6 +66,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
         }
         else {
             this.musica.pause();
+        }
+        if ((this.keys.isKeyDown(KeyEvent.VK_P) || this.keys.isKeyDown(KeyEvent.VK_SPACE))) {
+            this.pausegame();
+        }
+        if ((this.keys.isKeyDown(KeyEvent.VK_M) || this.keys.isKeyDown(KeyEvent.VK_ESCAPE))) {
+            this.setGameStatus(gamemenu);
         }
         if (this.obs.getXPosition() < 0) {
             this.obs.setDirection(Math.abs(180 - this.obs.getDirection()));
@@ -90,6 +99,9 @@ public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
     }
 
     public void gamePaused() {
+        if ((this.keys.isKeyDown(KeyEvent.VK_P) || this.keys.isKeyDown(KeyEvent.VK_SPACE))) {
+            this.unpausegame();
+        }
     }
 
     public void gamePaint(Graphics2D g2d) {
