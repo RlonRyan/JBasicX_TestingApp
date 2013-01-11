@@ -40,7 +40,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
     }
 
     public void gameMenu() {
-        if ((this.keys.isKeyDown(KeyEvent.VK_M) || this.keys.isKeyDown(KeyEvent.VK_ESCAPE))) {
+        if ((this.keys.isKeyDownAndRemove(KeyEvent.VK_M) || this.keys.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(gamerunning);
         }
     }
