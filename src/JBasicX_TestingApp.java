@@ -1,4 +1,3 @@
-
 /**
  * JBasicX_TestingApp a JBasicX powered game.
  ** Author: RlonRyan
@@ -67,10 +66,10 @@ public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
         else {
             this.musica.pause();
         }
-        if ((this.keys.isKeyDown(KeyEvent.VK_P) || this.keys.isKeyDown(KeyEvent.VK_SPACE))) {
+        if ((this.keys.isKeyDownAndRemove(KeyEvent.VK_P) || this.keys.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
             this.pausegame();
         }
-        if ((this.keys.isKeyDown(KeyEvent.VK_M) || this.keys.isKeyDown(KeyEvent.VK_ESCAPE))) {
+        if ((this.keys.isKeyDownAndRemove(KeyEvent.VK_M) || this.keys.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(gamemenu);
         }
         if (this.obs.getXPosition() < 0) {
@@ -99,7 +98,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
     }
 
     public void gamePaused() {
-        if ((this.keys.isKeyDown(KeyEvent.VK_P) || this.keys.isKeyDown(KeyEvent.VK_SPACE))) {
+        if ((this.keys.isKeyDownAndRemove(KeyEvent.VK_P) || this.keys.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
             this.unpausegame();
         }
     }
