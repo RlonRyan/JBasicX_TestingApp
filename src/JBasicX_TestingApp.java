@@ -1,8 +1,8 @@
 /**
- * JBasicX_TestingApp a JBasicX powered game.
- ** Author: RlonRyan
- ** Version Date: Jan 9, 2012
- *
+ ** @author RlonRyan
+ *  @name JBasicX_TestingApp a JBasicX powered game.
+ ** @version 1.0.2
+ *  @date Jan 9, 2012
  */
 import JBasicX.JImageHandlerX;
 import JGameEngineX.*;
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
-public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
+public class JBasicX_TestingApp extends JGameEngineX {
 
     private JPicSpriteX tom;
     private JPicSpriteX obs;
@@ -31,7 +31,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements Runnable {
         obs = new JPicSpriteX(images.getDefaultimage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.noScale();
         obs.setPosition(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
-        obs.setSpeed(new Random().nextInt(5) + 10);
+        obs.setSpeed(new Random().nextInt(5)*10 + 50);
         int i = new Random().nextInt(361);
         obs.setRotation(i - 90);
         obs.setDirection(i);
