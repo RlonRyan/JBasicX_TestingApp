@@ -14,8 +14,8 @@ import java.util.Random;
 
 public class JBasicX_TestingApp extends JGameEngineX {
 
-    private JPicSpriteX tom;
-    private JPicSpriteX obs;
+    private JPictureSpriteX tom;
+    private JPictureSpriteX obs;
     private JSoundX musica;
     private int hits = 0;
     private int fired = 0;
@@ -25,10 +25,10 @@ public class JBasicX_TestingApp extends JGameEngineX {
     public void gameStart() {
         this.setDFPS(100);
         images = new JImageHandlerX();
-        tom = new JPicSpriteX(images.getDefaultimage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+        tom = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         tom.noScale();
         tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
-        obs = new JPicSpriteX(images.getDefaultimage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+        obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.noScale();
         obs.setPosition(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.setSpeed(new Random().nextInt(5)*10 + 50);
