@@ -1,8 +1,9 @@
+
 /**
  ** @author RlonRyan
- *  @name JBasicX_TestingApp a JBasicX powered game.
+ * @name JBasicX_TestingApp a JBasicX powered game.
  ** @version 1.0.2
- *  @date Jan 9, 2012
+ * @date Jan 9, 2012
  */
 import JBasicX.JImageHandlerX;
 import JGameEngineX.*;
@@ -21,6 +22,7 @@ public class JBasicX_TestingApp extends JGameEngineX {
     private int fired = 0;
     private int bouncers = 0;
     private JSpriteHolderX targets;
+    private long lastfire = 0;
 
     @Override
     public void gameStart() {
@@ -32,18 +34,18 @@ public class JBasicX_TestingApp extends JGameEngineX {
         obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.noScale();
         obs.setPosition(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
-        obs.setSpeed(new Random().nextInt(5)*10 + 50);
+        obs.setSpeed(new Random().nextInt(5) * 10 + 50);
         int i = new Random().nextInt(361);
         obs.setRotation(i - 90);
         obs.setDirection(i);
         musica = new JSoundX();
-        this.setGameStatus(JBasicX_TestingApp.gamepaused);
         targets = new JSpriteHolderX(this);
         for (double c = images.getDefaultImage().getWidth(this) / 2; c < this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
             for (double r = images.getDefaultImage().getHeight(this) / 2; r < this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
                 targets.addSprite(1, c, r);
             }
         }
+        //  Actual game status
         this.setGameStatus(JBasicX_TestingApp.gamerunning);
     }
 
@@ -68,11 +70,14 @@ public class JBasicX_TestingApp extends JGameEngineX {
             this.tom.incX(4);
         }
         if ((this.isKeyDown(KeyEvent.VK_UP) || this.isKeyDown(KeyEvent.VK_W))) {
-            spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getXPosition(), this.tom.getYPosition() - this.tom.getHeight() / 2);
-            fired++;
+            if (System.currentTimeMillis() - this.lastfire > 250) {
+                lastfire = System.currentTimeMillis();
+                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getXPosition(), this.tom.getYPosition() - this.tom.getHeight() / 2);
+                fired++;
+            }
         }
         if (this.isKeyDown(KeyEvent.VK_B)) {
-            spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5)*10 + 10, this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+            spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5) * 10 + 10, this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
             bouncers++;
         }
         if ((this.isKeyDown(KeyEvent.VK_DOWN) || this.isKeyDown(KeyEvent.VK_S))) {
@@ -107,17 +112,32 @@ public class JBasicX_TestingApp extends JGameEngineX {
             this.obs.setRotation(this.obs.getDirection() - 90);
             this.obs.setYPosition(this.getGameWinHeight());
         }
+        JSpriteX temp = this.spriteholder.collidesWith(this.obs);
+        if (temp != null) {
+            this.obs.applyForce(temp.getSpeed(), temp.getDirection());
+            if (this.obs.getSpeed() > 10) {
+                this.obs.setSpeed(10);
+            }
+        }
         //this.sprholder.updateSprites();
         this.obs.update();
         //hits += spriteholder.checkCollisionsWith(obs);
-        hits += targets.checkCollisionWithAndRemove(obs);
+        hits += targets.checkCollisionsWithAndRemove(obs);
     }
 
     @Override
     public void gamePaused() {
+        if (this.spriteholder.isActive())
+            this.spriteholder.stop();
         if ((this.isKeyDownAndRemove(KeyEvent.VK_P) || this.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
             this.unpausegame();
         }
+    }
+
+    @Override
+    public void unpausegame() {
+        this.spriteholder.start();
+        super.unpausegame();
     }
 
     @Override
