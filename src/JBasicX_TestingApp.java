@@ -20,6 +20,7 @@ public class JBasicX_TestingApp extends JGameEngineX {
     private int hits = 0;
     private int fired = 0;
     private int bouncers = 0;
+    private JSpriteHolderX targets;
 
     @Override
     public void gameStart() {
@@ -36,6 +37,13 @@ public class JBasicX_TestingApp extends JGameEngineX {
         obs.setRotation(i - 90);
         obs.setDirection(i);
         musica = new JSoundX();
+        this.setGameStatus(JBasicX_TestingApp.gamepaused);
+        targets = new JSpriteHolderX(this);
+        for (double c = images.getDefaultImage().getWidth(this) / 2; c < this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
+            for (double r = images.getDefaultImage().getHeight(this) / 2; r < this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
+                targets.addSprite(1, c, r);
+            }
+        }
         this.setGameStatus(JBasicX_TestingApp.gamerunning);
     }
 
@@ -101,7 +109,8 @@ public class JBasicX_TestingApp extends JGameEngineX {
         }
         //this.sprholder.updateSprites();
         this.obs.update();
-        hits += spriteholder.checkCollisionsWith(obs);
+        //hits += spriteholder.checkCollisionsWith(obs);
+        hits += targets.checkCollisionWithAndRemove(obs);
     }
 
     @Override
@@ -118,6 +127,8 @@ public class JBasicX_TestingApp extends JGameEngineX {
         this.obs.draw(g2d);
         this.resetAffineTransform();
         spriteholder.drawSprites(g2d);
+        this.resetAffineTransform();
+        targets.drawSprites(g2d);
         this.resetAffineTransform();
         g2d.drawString("Hits: " + hits, this.getGameWinWidth() - 100, this.getGameWinHeight() - 10);
         g2d.drawString("Fired: " + fired, this.getGameWinWidth() - 200, this.getGameWinHeight() - 10);
