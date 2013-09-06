@@ -34,7 +34,8 @@ public class JBasicX_TestingApp extends JGameEngineX {
         obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.noScale();
         obs.setPosition(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
-        obs.setSpeed(new Random().nextInt(5) * 10 + 50);
+        obs.setVel(new Random().nextInt(5) * 10 + 50);
+        obs.setAccel(-10.00);
         int i = new Random().nextInt(361);
         obs.setRotation(i - 90);
         obs.setDirection(i);
@@ -112,13 +113,12 @@ public class JBasicX_TestingApp extends JGameEngineX {
             this.obs.setRotation(this.obs.getDirection() - 90);
             this.obs.setYPosition(this.getGameWinHeight());
         }
-        JSpriteX temp = this.spriteholder.collidesWith(this.obs);
+        JSpriteX temp = this.spriteholder.collidesWithAndRemove(this.obs);
         if (temp != null) {
-            this.obs.applyForce(temp.getSpeed(), temp.getDirection());
-            if (this.obs.getSpeed() > 10) {
-                this.obs.setSpeed(10);
-            }
+            this.obs.applyForce(temp.getVel(), temp.getDirection());
+            this.obs.setRotation(this.obs.getDirection() - 90);
         }
+
         //this.sprholder.updateSprites();
         this.obs.update();
         //hits += spriteholder.checkCollisionsWith(obs);
@@ -127,8 +127,9 @@ public class JBasicX_TestingApp extends JGameEngineX {
 
     @Override
     public void gamePaused() {
-        if (this.spriteholder.isActive())
+        if (this.spriteholder.isActive()){
             this.spriteholder.stop();
+        }
         if ((this.isKeyDownAndRemove(KeyEvent.VK_P) || this.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
             this.unpausegame();
         }
@@ -144,10 +145,16 @@ public class JBasicX_TestingApp extends JGameEngineX {
     public void gamePaint(Graphics2D g2d) {
         this.tom.draw(g2d);
         this.resetAffineTransform();
+        this.tom.drawBoundsTo(g2d);
+        this.resetAffineTransform();
         this.obs.draw(g2d);
         this.resetAffineTransform();
-        spriteholder.drawSprites(g2d);
+        this.obs.drawBoundsTo(g2d);
         this.resetAffineTransform();
+        spriteholder.drawSprites(g2d);
+        spriteholder.drawSpriteBounds(g2d);
+        this.resetAffineTransform();
+        targets.drawSpriteBounds(g2d);
         targets.drawSprites(g2d);
         this.resetAffineTransform();
         g2d.drawString("Hits: " + hits, this.getGameWinWidth() - 100, this.getGameWinHeight() - 10);
