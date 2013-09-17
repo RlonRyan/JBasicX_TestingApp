@@ -1,10 +1,9 @@
-
 /**
- ** @author RlonRyan
- * @name JBasicX_TestingApp a JBasicX powered game.
- ** @version 1.0.2
- * @date Jan 9, 2012
+ * @author  RlonRyan
+ * @name    JBasicX_TestingApp a JBasicX powered game.
+ * @date    Jan 9, 2012
  */
+
 import JBasicX.JImageHandlerX;
 import JGameEngineX.*;
 import JIOX.JSoundX;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<jnlp href="launch.jnlp" spec="1.0+">
+<jnlp codebase="file:/C:/Users/Ryan/Documents/NetBeansProjects/JBasicX_TestingApp/dist/" href="launch.jnlp" spec="1.0+">
     <information>
         <title>JBasicX_TestingApp</title>
         <vendor>Ryan</vendor>
@@ -18,5 +18,6 @@
         <jar href="JBasicX_TestingApp.jar" main="true"/>
     <jar href="lib/JBasicX.jar"/>
 </resources>
-    <component-desc/>
+    <applet-desc height="480" main-class="JBasicX_TestingApp" name="JBasicX_TestingApp" width="640">
+    </applet-desc>
 </jnlp>
