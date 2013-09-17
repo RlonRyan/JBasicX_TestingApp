@@ -1,8 +1,10 @@
 /**
  * @author  RlonRyan
- * @name    JBasicX_TestingApp a JBasicX powered game.
+ * @name    JBasicX_TestingApp
+ * @version 1.0.0
  * @date    Jan 9, 2012
- */
+ * @info    Powered by JBasicX
+**/
 
 import JBasicX.JImageHandlerX;
 import JGameEngineX.*;
