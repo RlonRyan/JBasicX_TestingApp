@@ -1,3 +1,5 @@
+package TestingApp;
+
 /**
  * @author  RlonRyan
  * @name    JBasicX_TestingApp
@@ -47,6 +49,7 @@ public class JBasicX_TestingApp extends JGameEngineX {
                 targets.addSprite(1, c, r);
             }
         }
+        this.spriteholder.addPicture("JBasicX/Bullet.png", "bullet");
         //  Actual game status
         this.setGameStatus(JBasicX_TestingApp.gamerunning);
     }
@@ -74,7 +77,7 @@ public class JBasicX_TestingApp extends JGameEngineX {
         if ((this.isKeyDown(KeyEvent.VK_UP) || this.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
                 lastfire = System.currentTimeMillis();
-                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getXPosition(), this.tom.getYPosition() - this.tom.getHeight() / 2);
+                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getXPosition(), this.tom.getYPosition() - this.tom.getHeight() / 2, "bullet");
                 fired++;
             }
         }
@@ -152,11 +155,11 @@ public class JBasicX_TestingApp extends JGameEngineX {
         this.resetAffineTransform();
         this.obs.drawBoundsTo(g2d);
         this.resetAffineTransform();
-        spriteholder.drawSprites(g2d);
-        spriteholder.drawSpriteBounds(g2d);
-        this.resetAffineTransform();
         targets.drawSpriteBounds(g2d);
         targets.drawSprites(g2d);
+        this.resetAffineTransform();
+        spriteholder.drawSprites(g2d);
+        spriteholder.drawSpriteBounds(g2d);
         this.resetAffineTransform();
         g2d.drawString("Hits: " + hits, this.getGameWinWidth() - 100, this.getGameWinHeight() - 10);
         g2d.drawString("Fired: " + fired, this.getGameWinWidth() - 200, this.getGameWinHeight() - 10);
