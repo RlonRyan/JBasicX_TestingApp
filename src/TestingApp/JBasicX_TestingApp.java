@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
+/* <applet code = "test" width = 300 height = 300> </applet> */
 public class JBasicX_TestingApp extends JGameEngineX {
 
     private JPictureSpriteX tom;
@@ -49,7 +50,7 @@ public class JBasicX_TestingApp extends JGameEngineX {
                 targets.addSprite(1, c, r);
             }
         }
-        this.spriteholder.addPicture("JBasicX/Bullet.png", "bullet");
+        this.spriteholder.addPicture("/JBasicX/Bullet.png", "bullet");
         //  Actual game status
         this.setGameStatus(JBasicX_TestingApp.gamerunning);
     }
@@ -180,5 +181,5 @@ public class JBasicX_TestingApp extends JGameEngineX {
     @Override
     public void gameStoppedPaint(Graphics2D g2d) {
         g2d.drawString("GAME STOPPED", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
-    }
+    }   
 }
