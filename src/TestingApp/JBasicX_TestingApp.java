@@ -10,6 +10,7 @@ package TestingApp;
 
 import JBasicX.JImageHandlerX;
 import JGameEngineX.*;
+import JIOX.JMenuX;
 import JIOX.JSoundX;
 import JSpriteX.*;
 import java.awt.*;
@@ -19,22 +20,28 @@ import java.util.Random;
 /* <applet code = "test" width = 300 height = 300> </applet> */
 public class JBasicX_TestingApp extends JGameEngineX {
 
+    private JMenuX mainmenu;
+
+    private JSpriteHolderX targets;
     private JPictureSpriteX tom;
     private JPictureSpriteX obs;
     private JSoundX musica;
+
     private int hits = 0;
     private int fired = 0;
     private int bouncers = 0;
-    private JSpriteHolderX targets;
     private long lastfire = 0;
 
     @Override
     public void gameStart() {
         this.setDFPS(100);
         images = new JImageHandlerX();
+        mainmenu = new JMenuX(this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "JBasicX Testing Application", "Start", "Info", "Test", "I need more menu elements");
+
         tom = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         tom.noScale();
         tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
+
         obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.noScale();
         obs.setPosition(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
@@ -43,8 +50,10 @@ public class JBasicX_TestingApp extends JGameEngineX {
         int i = new Random().nextInt(361);
         obs.setRotation(i - 90);
         obs.setDirection(i);
+
         musica = new JSoundX();
         targets = new JSpriteHolderX(this);
+        
         for (double c = images.getDefaultImage().getWidth(this) / 2; c < this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
             for (double r = images.getDefaultImage().getHeight(this) / 2; r < this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
                 targets.addSprite(1, c, r);
@@ -52,7 +61,7 @@ public class JBasicX_TestingApp extends JGameEngineX {
         }
         this.spriteholder.addPicture("/JBasicX/Bullet.png", "bullet");
         //  Actual game status
-        this.setGameStatus(JBasicX_TestingApp.gamerunning);
+        this.setGameStatus(JBasicX_TestingApp.gamemenu);
     }
 
     @Override
@@ -64,6 +73,7 @@ public class JBasicX_TestingApp extends JGameEngineX {
         if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(gamerunning);
         }
+
     }
 
     @Override
@@ -169,7 +179,8 @@ public class JBasicX_TestingApp extends JGameEngineX {
 
     @Override
     public void gameMenuPaint(Graphics2D g2d) {
-        g2d.drawString("GAME MENU", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
+        //g2d.drawString("GAME MENU", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
+        mainmenu.draw(g2d);
     }
 
     @Override
@@ -181,5 +192,5 @@ public class JBasicX_TestingApp extends JGameEngineX {
     @Override
     public void gameStoppedPaint(Graphics2D g2d) {
         g2d.drawString("GAME STOPPED", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
-    }   
+    }
 }
