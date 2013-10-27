@@ -1,13 +1,13 @@
 package TestingApp;
 
 /**
- * @author  RlonRyan
- * @name    JBasicX_TestingApp
+ * @author RlonRyan
+ * @name JBasicX_TestingApp
  * @version 1.0.0
- * @date    Jan 9, 2012
- * @info    Powered by JBasicX
-**/
-
+ * @date Jan 9, 2012
+ * @info Powered by JBasicX
+ *
+ */
 import JBasicX.JImageHandlerX;
 import JGameEngineX.*;
 import JIOX.JMenuX.JMenuListenerX;
@@ -18,16 +18,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
-/* <applet code = "test" width = 300 height = 300> </applet> */
 public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
 
     private JMenuX mainmenu;
-
+    private JMenuX pausemenu;
     private JSpriteHolderX targets;
     private JPictureSpriteX tom;
     private JPictureSpriteX obs;
     private JSoundX musica;
-
     private int hits = 0;
     private int fired = 0;
     private int bouncers = 0;
@@ -37,34 +35,47 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
     public void gameStart() {
         this.setDFPS(100);
         images = new JImageHandlerX();
-        mainmenu = new JMenuX(this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "JBasicX Testing Application", "Start", "Info", "Test", "I need more menu elements");
 
+        mainmenu = new JMenuX(this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "JBasicX Testing Application", "Start", "Reset", "Info", "Quit");
         mainmenu.addEventListener(this);
+
+        pausemenu = new JMenuX(this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "Game Paused", "Resume", "Main Menu");
+        pausemenu.setColorSchemeElement("background", new Color(0,0,0,200));
+        pausemenu.addEventListener(this);
 
         tom = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         tom.noScale();
-        tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
 
         obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.noScale();
+
+        musica = new JSoundX();
+        targets = new JSpriteHolderX(this);
+
+        this.spriteholder.addPicture("/Resources/Bullet.png", "bullet");
+
+        //  Actual game status
+        this.setGameStatus(GAME_STATUS.GAME_MENU);
+
+        //  Finally setup the board
+        setup();
+    }
+
+    public void setup() {
+        tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
         obs.setPosition(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.setVel(new Random().nextInt(5) * 10 + 50);
         obs.setAccel(-10.00);
         int i = new Random().nextInt(361);
         obs.setRotation(i - 90);
         obs.setDirection(i);
-
-        musica = new JSoundX();
-        targets = new JSpriteHolderX(this);
+        spriteholder.deleteAllSprites();
 
         for (double c = images.getDefaultImage().getWidth(this) / 2; c < this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
             for (double r = images.getDefaultImage().getHeight(this) / 2; r < this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
                 targets.addSprite(1, c, r);
             }
         }
-        this.spriteholder.addPicture("/Resources/Bullet.png", "bullet");
-        //  Actual game status
-        this.setGameStatus(JBasicX_TestingApp.gamemenu);
     }
 
     @Override
@@ -73,8 +84,9 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
 
     @Override
     public void gameMenu() {
+        obs.pause();
         if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
-            this.setGameStatus(gamerunning);
+            this.setGameStatus(GAME_STATUS.GAME_RUNNING);
         }
         if (this.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
             this.mainmenu.incrementHighlight();
@@ -85,20 +97,9 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
         if (this.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
             this.mainmenu.selectMenuElement();
         }
-    }
-
-    @Override
-    public void elementHighlighted(int element) {
-        System.out.println("Highlighted Element: " + element);
-    }
-
-    @Override
-    public void elementSelected(int element) {
-        if(element == 1) {
-            this.setGameStatus(gamerunning);
-        }
-        else {
-            System.out.println("Selected Element: " + element);
+        mainmenu.highlightNearest(this.getGameGraphics(), (int)mouse.getPosition().getY());
+        if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
+            mainmenu.selectNearest(this.getGameGraphics(), (int)mouse.getPosition().getY());
         }
     }
 
@@ -132,7 +133,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
             this.pausegame();
         }
         if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
-            this.setGameStatus(gamemenu);
+            this.setGameStatus(GAME_STATUS.GAME_MENU);
         }
         if (this.obs.getXPosition() < 0) {
             this.obs.setDirection(180 - this.obs.getDirection());
@@ -168,18 +169,26 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
 
     @Override
     public void gamePaused() {
-        if (this.spriteholder.isActive()){
-            this.spriteholder.stop();
+        obs.pause();
+        if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
+            this.setGameStatus(GAME_STATUS.GAME_MENU);
         }
-        if ((this.isKeyDownAndRemove(KeyEvent.VK_P) || this.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
-            this.unpausegame();
+        if (this.isKeyDownAndRemove(KeyEvent.VK_SPACE) || this.isKeyDownAndRemove(KeyEvent.VK_P)) {
+            this.setGameStatus(GAME_STATUS.GAME_RUNNING);
         }
-    }
-
-    @Override
-    public void unpausegame() {
-        this.spriteholder.start();
-        super.unpausegame();
+        if (this.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
+            this.pausemenu.incrementHighlight();
+        }
+        if (this.isKeyDownAndRemove(KeyEvent.VK_UP)) {
+            this.pausemenu.deincrementHighlight();
+        }
+        if (this.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
+            this.pausemenu.selectMenuElement();
+        }
+        pausemenu.highlightNearest(this.getGameGraphics(), (int)mouse.getPosition().getY());
+        if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
+            pausemenu.selectNearest(this.getGameGraphics(), (int)mouse.getPosition().getY());
+        }
     }
 
     @Override
@@ -205,18 +214,61 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
 
     @Override
     public void gameMenuPaint(Graphics2D g2d) {
-        //g2d.drawString("GAME MENU", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
         mainmenu.draw(g2d);
     }
 
     @Override
     public void gamePausePaint(Graphics2D g2d) {
-        g2d.drawString("GAME PAUSED", this.getGameWinWidthCenter() - 10, this.getGameWinHeightCenter());
         gamePaint(g2d);
+        pausemenu.draw(g2d);
     }
 
     @Override
     public void gameStoppedPaint(Graphics2D g2d) {
         g2d.drawString("GAME STOPPED", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
     }
+
+    @Override
+    public void elementHighlighted(Object source, int element) {
+        //System.out.println("Highlighted Element: " + element);
+    }
+
+    @Override
+    public void elementSelected(Object source, int element) {
+        switch (((JMenuX) source).getTitle()) {
+            case "JBasicX Testing Application":
+                switch (element) {
+                    case 0:
+                        this.setGameStatus(GAME_STATUS.GAME_RUNNING);
+                        this.spriteholder.start();
+                        break;
+                    case 1:
+                        this.setup();
+                        this.setGameStatus(GAME_STATUS.GAME_RUNNING);
+                        break;
+                    case 2:
+                        this.setGameDataVisable(!this.isGameDataVisible());
+                        break;
+                    case 3:
+                        this.setGameStatus(GAME_STATUS.GAME_STOPPED);
+                        this.stop();
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Selected Element: " + element);
+                }
+                break;
+            case "Game Paused":
+                switch (element) {
+                    case 0:
+                        this.setGameStatus(GAME_STATUS.GAME_RUNNING);
+                        this.spriteholder.start();
+                        break;
+                    case 1:
+                        this.setGameStatus(GAME_STATUS.GAME_MENU);
+                }
+        }
+    }
+
+
 }
