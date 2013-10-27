@@ -10,7 +10,8 @@ package TestingApp;
 
 import JBasicX.JImageHandlerX;
 import JGameEngineX.*;
-import JIOX.JMenuX;
+import JIOX.JMenuX.JMenuListenerX;
+import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
 import JSpriteX.*;
 import java.awt.*;
@@ -18,7 +19,7 @@ import java.awt.event.*;
 import java.util.Random;
 
 /* <applet code = "test" width = 300 height = 300> </applet> */
-public class JBasicX_TestingApp extends JGameEngineX {
+public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
 
     private JMenuX mainmenu;
 
@@ -38,6 +39,8 @@ public class JBasicX_TestingApp extends JGameEngineX {
         images = new JImageHandlerX();
         mainmenu = new JMenuX(this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "JBasicX Testing Application", "Start", "Info", "Test", "I need more menu elements");
 
+        mainmenu.addEventListener(this);
+
         tom = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         tom.noScale();
         tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
@@ -53,13 +56,13 @@ public class JBasicX_TestingApp extends JGameEngineX {
 
         musica = new JSoundX();
         targets = new JSpriteHolderX(this);
-        
+
         for (double c = images.getDefaultImage().getWidth(this) / 2; c < this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
             for (double r = images.getDefaultImage().getHeight(this) / 2; r < this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
                 targets.addSprite(1, c, r);
             }
         }
-        this.spriteholder.addPicture("/JBasicX/Bullet.png", "bullet");
+        this.spriteholder.addPicture("/Resources/Bullet.png", "bullet");
         //  Actual game status
         this.setGameStatus(JBasicX_TestingApp.gamemenu);
     }
@@ -73,7 +76,30 @@ public class JBasicX_TestingApp extends JGameEngineX {
         if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(gamerunning);
         }
+        if (this.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
+            this.mainmenu.incrementHighlight();
+        }
+        if (this.isKeyDownAndRemove(KeyEvent.VK_UP)) {
+            this.mainmenu.deincrementHighlight();
+        }
+        if (this.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
+            this.mainmenu.selectMenuElement();
+        }
+    }
 
+    @Override
+    public void elementHighlighted(int element) {
+        System.out.println("Highlighted Element: " + element);
+    }
+
+    @Override
+    public void elementSelected(int element) {
+        if(element == 1) {
+            this.setGameStatus(gamerunning);
+        }
+        else {
+            System.out.println("Selected Element: " + element);
+        }
     }
 
     @Override
