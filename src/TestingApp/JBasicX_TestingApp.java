@@ -226,6 +226,10 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
     public void gameStoppedPaint(Graphics2D g2d) {
         g2d.drawString("GAME STOPPED", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
         this.drawRecurisive(g2d, this.getGameWinWidthCenter(), this.getGameWinHeightCenter(), 100);
+        this.resetGraphics();
+        g2d.translate(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+        g2d.scale(0.25, 0.25);
+        this.drawRecurisive2(g2d, 5, 5);
     }
 
     @Override
@@ -275,6 +279,19 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
         g2d.drawLine(x, y, x + (i / 10), y + (i / 10));
         if (i - 1 > 0) {
             drawRecurisive(g2d, x + (i / 10), y + (i / 10), i - 1);
+        }
+    }
+    
+    public void drawRecurisive2(Graphics2D g2d, int sides, int depth) {
+        for(int i = 0; i < sides; i++) {
+            for(int ii = 0; ii < 360 / sides; ii++) {
+                g2d.drawLine(0, 0, depth, depth);
+                g2d.translate(depth, depth);
+                g2d.rotate(Math.toRadians(1));
+            }
+            if (depth - 1 > 0) {
+                drawRecurisive2(g2d, sides, depth - 1);
+            }
         }
     }
 
