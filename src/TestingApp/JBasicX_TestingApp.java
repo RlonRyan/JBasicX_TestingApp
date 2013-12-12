@@ -36,10 +36,10 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
         this.setDFPS(100);
         images = new JImageHandlerX();
 
-        mainmenu = new JMenuX("Main Menu", this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "Start", "Reset", "Info", "Quit");
+        mainmenu = new JMenuX("Main Menu", this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, "Start", "Reset", "Info", "Quit");
         mainmenu.addEventListener(this);
 
-        pausemenu = new JMenuX("Pause Menu", this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "Resume", "Main Menu");
+        pausemenu = new JMenuX("Pause Menu", this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, "Resume", "Main Menu");
         pausemenu.setStyleElement("background", new Color(0, 0, 0, 200));
         pausemenu.addEventListener(this);
 
@@ -238,7 +238,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
 
     @Override
     public void elementHighlighted(Object source, int... data) {
-        //System.out.println("Highlighted Element: " + element);
+        System.out.println("Highlighted Element: " + data[0]);
     }
 
     @Override
