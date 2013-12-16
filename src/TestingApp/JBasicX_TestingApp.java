@@ -36,11 +36,11 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
         this.setDFPS(100);
         images = new JImageHandlerX();
 
-        mainmenu = new JMenuX(this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "JBasicX Testing Application", "Start", "Reset", "Info", "Quit");
+        mainmenu = new JMenuX("Main Menu", this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "Start", "Reset", "Info", "Quit");
         mainmenu.addEventListener(this);
 
-        pausemenu = new JMenuX(this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "Game Paused", "Resume", "Main Menu");
-        pausemenu.setColorSchemeElement("background", new Color(0, 0, 0, 200));
+        pausemenu = new JMenuX("Pause Menu", this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, "Resume", "Main Menu");
+        pausemenu.setStyleElement("background", new Color(0, 0, 0, 200));
         pausemenu.addEventListener(this);
 
         tom = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
@@ -97,10 +97,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
         if (this.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
             this.mainmenu.selectMenuElement();
         }
+        /*  To Be Re-added
         mainmenu.highlightNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
         if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
             mainmenu.selectNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
         }
+        */
     }
 
     @Override
@@ -184,10 +186,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
         if (this.isKeyDownAndRemove(KeyEvent.VK_S)) {
             this.setGameStatus(GAME_STATUS.GAME_STOPPED);
         }
+        /* To be readded
         pausemenu.highlightNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
         if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
             pausemenu.selectNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
         }
+        */
     }
 
     @Override
@@ -233,15 +237,15 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
     }
 
     @Override
-    public void elementHighlighted(Object source, int element) {
+    public void elementHighlighted(Object source, int... data) {
         //System.out.println("Highlighted Element: " + element);
     }
 
     @Override
-    public void elementSelected(Object source, int element) {
+    public void elementSelected(Object source, int... data) {
         switch (((JMenuX) source).getTitle()) {
             case "JBasicX Testing Application":
-                switch (element) {
+                switch (data[0]) {
                     case 0:
                         this.setGameStatus(GAME_STATUS.GAME_RUNNING);
                         this.spriteholder.start();
@@ -259,11 +263,11 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
                         System.exit(0);
                         break;
                     default:
-                        System.out.println("Selected Element: " + element);
+                        System.out.println("Selected Element: " + data[0]);
                 }
                 break;
             case "Game Paused":
-                switch (element) {
+                switch (data[0]) {
                     case 0:
                         this.setGameStatus(GAME_STATUS.GAME_RUNNING);
                         this.spriteholder.start();
