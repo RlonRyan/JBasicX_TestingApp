@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp codebase="file:/C:/Users/Ryan/Documents/NetBeansProjects/JBasicX_TestingApp/dist/" href="launch.jnlp" spec="1.0+">
+    <information>
+        <title>JBasicX_TestingApp</title>
+        <vendor>Ryan</vendor>
+        <homepage href=""/>
+        <description>JBasicX_TestingApp</description>
+        <description kind="short">JBasicX_TestingApp</description>
+    <icon href="Owl Icon.jpg" kind="default"/>
+<offline-allowed/>
+</information>
+    <update check="background"/>
+    <security>
+<all-permissions/>
+</security>
+    <resources>
+        <j2se java-vm-args="-Djava.security.policy=applet.policy" version="1.7+"/>
+        <jar href="JBasicX_TestingApp.jar" main="true"/>
+    <jar href="lib/JBasicX.jar"/>
+</resources>
+    <applet-desc height="480" main-class="JBasicX_TestingApp" name="JBasicX_TestingApp" width="640">
+    </applet-desc>
+</jnlp>
