@@ -13,6 +13,7 @@ import JGameEngineX.*;
 import JIOX.JMenuX.JMenuListenerX;
 import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
+import JNetX.JClientX;
 import JNetX.JHostX;
 import JNetX.JNetworkListenerX;
 import JNetX.JPacketX.JPackectX;
@@ -33,12 +34,19 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     private int fired = 0;
     private int bouncers = 0;
     private long lastfire = 0;
-
     private JHostX host;
+    private JClientX client;
 
     @Override
     public void onPacket(JPackectX packet) {
         System.out.println("Packet Received:\n\t" + packet.toString());
+        if (packet.getType() == JPackectX.PACKET_TYPE.UPDATE) {
+            try {
+                this.tom.incX(Integer.parseInt((String) packet.getData()[1]));
+            }
+            catch (Exception e) {
+            }
+        }
     }
 
     @Override
@@ -53,43 +61,42 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         pausemenu.setStyleElement("background", new Color(0, 0, 0, 200));
         pausemenu.addEventListener(this);
 
-        tom = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
-        tom.noScale();
-
-        obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
-        obs.noScale();
-
         musica = new JSoundX();
         targets = new JSpriteHolderX(this);
 
         this.spriteholder.addPicture("/Resources/Bullet.png", "bullet");
-
-        //  Actual game status
-        this.setGameStatus(GAME_STATUS.GAME_MENU);
+        this.spriteholder.deleteAllSprites();
+        this.targets.deleteAllSprites();
 
         //  Finally setup the board
         setup();
+
+        //  Actual game status
+        this.setGameStatus(GAME_STATUS.GAME_MENU);
     }
 
     public void setup() {
-        tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
-        obs.setPosition(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
-        obs.setVel(new Random().nextInt(5) * 10 + 50);
-        obs.setAccel(-10.00);
-        int i = new Random().nextInt(361);
-        obs.setRotation(i - 90);
-        obs.setDirection(i);
-        spriteholder.deleteAllSprites();
 
-        for (double c = images.getDefaultImage().getWidth(this) / 2; c < this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
-            for (double r = images.getDefaultImage().getHeight(this) / 2; r < this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
+        for (double c = 0; c + images.getDefaultImage().getWidth(this) <= this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
+            for (double r = 0; r + images.getDefaultImage().getWidth(this) <= this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
                 targets.addSprite(1, c, r);
             }
         }
 
-        this.host = new JHostX(4444);
-        this.host.start();
-        this.host.addListener(this);
+        tom = new JPictureSpriteX(images.getDefaultImage(), 0, 0);
+        tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
+
+        obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+        obs.setVel(new Random().nextInt(5) * 10 + 50);
+        obs.setAccel(-10.00);
+        obs.setRotation(new Random().nextInt(361));
+        obs.setDirection((int) obs.getRotation() + 90);
+        host = new JHostX(4444);
+        host.start();
+        host.addListener(this);
+        client = new JClientX("192.168.1.10", 4444);
+        client.addListener(this);
+        client.start();
 
     }
 
@@ -112,22 +119,30 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if (this.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
             this.mainmenu.selectMenuElement();
         }
-        /*  To Be Re-added
-        mainmenu.highlightNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
-        if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
-            mainmenu.selectNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
-        }
-        */
+        /*
+         * To Be Re-added
+         * mainmenu.highlightNearest(this.getGameGraphics(), (int)
+         * mouse.getPosition().getY());
+         * if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
+         * mainmenu.selectNearest(this.getGameGraphics(), (int)
+         * mouse.getPosition().getY());
+         * }
+         */
     }
 
     @Override
     public void gameUpdate() {
         if ((this.isKeyDown(KeyEvent.VK_LEFT) || this.isKeyDown(KeyEvent.VK_A)) && this.tom.getXPosition() > 10) {
-
             this.tom.incX(-4);
+            if (!this.host.isListening()) {
+                this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "-4"));
+            }
         }
         if ((this.isKeyDown(KeyEvent.VK_RIGHT) || this.isKeyDown(KeyEvent.VK_D)) && this.tom.getXPosition() < this.getGameWinWidth() - 10) {
             this.tom.incX(4);
+            if (!this.host.isListening()) {
+                this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "4"));
+            }
         }
         if ((this.isKeyDown(KeyEvent.VK_UP) || this.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
@@ -142,7 +157,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         }
         if ((this.isKeyDown(KeyEvent.VK_DOWN) || this.isKeyDown(KeyEvent.VK_S))) {
             this.musica.play();
-        } else {
+        }
+        else {
             this.musica.pause();
         }
         if ((this.isKeyDownAndRemove(KeyEvent.VK_P) || this.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
@@ -155,15 +171,18 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
             this.obs.setDirection(180 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
             this.obs.setXPosition(0);
-        } else if (this.obs.getXPosition() > this.getGameWinWidth()) {
+        }
+        else if (this.obs.getXPosition() > this.getGameWinWidth()) {
             this.obs.setDirection(180 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
             this.obs.setXPosition(this.getGameWinWidth());
-        } else if (this.obs.getYPosition() < 0) {
+        }
+        else if (this.obs.getYPosition() < 0) {
             this.obs.setDirection(360 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
             this.obs.setYPosition(0);
-        } else if (this.obs.getYPosition() > this.getGameWinHeight()) {
+        }
+        else if (this.obs.getYPosition() > this.getGameWinHeight()) {
             this.obs.setDirection(360 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
             this.obs.setYPosition(this.getGameWinHeight());
@@ -201,12 +220,15 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if (this.isKeyDownAndRemove(KeyEvent.VK_S)) {
             this.setGameStatus(GAME_STATUS.GAME_STOPPED);
         }
-        /* To be readded
-        pausemenu.highlightNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
-        if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
-            pausemenu.selectNearest(this.getGameGraphics(), (int) mouse.getPosition().getY());
-        }
-        */
+        /*
+         * To be readded
+         * pausemenu.highlightNearest(this.getGameGraphics(), (int)
+         * mouse.getPosition().getY());
+         * if (this.mouse.isMousedown() && !this.mouse.isMousedrag()) {
+         * pausemenu.selectNearest(this.getGameGraphics(), (int)
+         * mouse.getPosition().getY());
+         * }
+         */
     }
 
     @Override
@@ -259,7 +281,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     @Override
     public void elementSelected(Object source, int... data) {
         switch (((JMenuX) source).getTitle()) {
-            case "JBasicX Testing Application":
+            case "Main Menu":
                 switch (data[0]) {
                     case 0:
                         this.setGameStatus(GAME_STATUS.GAME_RUNNING);
@@ -281,7 +303,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
                         System.out.println("Selected Element: " + data[0]);
                 }
                 break;
-            case "Game Paused":
+            case "Pause Menu":
                 switch (data[0]) {
                     case 0:
                         this.setGameStatus(GAME_STATUS.GAME_RUNNING);
@@ -302,8 +324,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     }
 
     public void drawRecurisive2(Graphics2D g2d, int sides, int depth) {
-        for(int i = 0; i < sides; i++) {
-            for(int ii = 0; ii < 360 / sides; ii++) {
+        for (int i = 0; i < sides; i++) {
+            for (int ii = 0; ii < 360 / sides; ii++) {
                 g2d.drawLine(0, 0, depth, depth);
                 g2d.translate(depth, depth);
                 g2d.rotate(Math.toRadians(1));
@@ -313,5 +335,4 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
             }
         }
     }
-
 }
