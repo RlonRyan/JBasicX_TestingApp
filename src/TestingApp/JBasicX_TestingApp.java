@@ -13,12 +13,14 @@ import JGameEngineX.*;
 import JIOX.JMenuX.JMenuListenerX;
 import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
+import JNetworkingX.JHostX;
+import JNetworkingX.JNetworkListenerX;
 import JSpriteX.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
-public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
+public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, JNetworkListenerX {
 
     private JMenuX mainmenu;
     private JMenuX pausemenu;
@@ -30,6 +32,13 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
     private int fired = 0;
     private int bouncers = 0;
     private long lastfire = 0;
+
+    private JHostX host;
+
+    @Override
+    public void onMessage(String message) {
+        System.out.println("Message Recieved:\n\t" + message);
+    }
 
     @Override
     public void gameStart() {
@@ -76,6 +85,11 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
                 targets.addSprite(1, c, r);
             }
         }
+
+        this.host = new JHostX(4444);
+        this.host.start();
+        this.host.addListener(this);
+        
     }
 
     @Override
@@ -285,7 +299,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX {
             drawRecurisive(g2d, x + (i / 10), y + (i / 10), i - 1);
         }
     }
-    
+
     public void drawRecurisive2(Graphics2D g2d, int sides, int depth) {
         for(int i = 0; i < sides; i++) {
             for(int ii = 0; ii < 360 / sides; ii++) {
