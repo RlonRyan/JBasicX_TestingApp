@@ -13,8 +13,9 @@ import JGameEngineX.*;
 import JIOX.JMenuX.JMenuListenerX;
 import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
-import JNetworkingX.JHostX;
-import JNetworkingX.JNetworkListenerX;
+import JNetX.JHostX;
+import JNetX.JNetworkListenerX;
+import JNetX.JPacketX.JPackectX;
 import JSpriteX.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -36,8 +37,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     private JHostX host;
 
     @Override
-    public void onMessage(String message) {
-        System.out.println("Message Recieved:\n\t" + message);
+    public void onPacket(JPackectX packet) {
+        System.out.println("Packet Received:\n\t" + packet.toString());
     }
 
     @Override
@@ -89,7 +90,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         this.host = new JHostX(4444);
         this.host.start();
         this.host.addListener(this);
-        
+
     }
 
     @Override
