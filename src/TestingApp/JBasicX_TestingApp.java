@@ -21,6 +21,7 @@ import JSpriteX.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
+import java.util.Scanner;
 
 public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, JNetworkListenerX {
 
@@ -94,7 +95,9 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         host = new JHostX(4444);
         host.start();
         host.addListener(this);
-        client = new JClientX("192.168.1.10", 4444);
+        System.out.println("Enter IP: ");
+        Scanner in = new Scanner(System.in);
+        client = new JClientX(in.nextLine(), 4444);
         client.addListener(this);
         client.start();
 
