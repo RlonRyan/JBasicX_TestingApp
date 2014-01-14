@@ -78,8 +78,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
     public void setup() {
 
-        for (double c = 0; c + images.getDefaultImage().getWidth(this) <= this.getGameWinWidth(); c += images.getDefaultImage().getWidth(this)) {
-            for (double r = 0; r + images.getDefaultImage().getWidth(this) <= this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(this)) {
+        for (double c = 0; c + images.getDefaultImage().getWidth(null) <= this.getGameWinWidth(); c += images.getDefaultImage().getWidth(null)) {
+            for (double r = 0; r + images.getDefaultImage().getWidth(null) <= this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(null)) {
                 targets.addSprite(1, c, r);
             }
         }
@@ -110,16 +110,16 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     @Override
     public void gameMenu() {
         obs.pause();
-        if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
+        if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(GAME_STATUS.GAME_RUNNING);
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
             this.mainmenu.incrementHighlight();
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_UP)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_UP)) {
             this.mainmenu.deincrementHighlight();
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
             this.mainmenu.selectMenuElement();
         }
         /*
@@ -135,39 +135,39 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
     @Override
     public void gameUpdate() {
-        if ((this.isKeyDown(KeyEvent.VK_LEFT) || this.isKeyDown(KeyEvent.VK_A)) && this.tom.getXPosition() > 10) {
+        if ((this.keyboard.isKeyDown(KeyEvent.VK_LEFT) || this.keyboard.isKeyDown(KeyEvent.VK_A)) && this.tom.getXPosition() > 10) {
             this.tom.incX(-4);
             if (!this.host.isListening()) {
                 this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "-4"));
             }
         }
-        if ((this.isKeyDown(KeyEvent.VK_RIGHT) || this.isKeyDown(KeyEvent.VK_D)) && this.tom.getXPosition() < this.getGameWinWidth() - 10) {
+        if ((this.keyboard.isKeyDown(KeyEvent.VK_RIGHT) || this.keyboard.isKeyDown(KeyEvent.VK_D)) && this.tom.getXPosition() < this.getGameWinWidth() - 10) {
             this.tom.incX(4);
             if (!this.host.isListening()) {
                 this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "4"));
             }
         }
-        if ((this.isKeyDown(KeyEvent.VK_UP) || this.isKeyDown(KeyEvent.VK_W))) {
+        if ((this.keyboard.isKeyDown(KeyEvent.VK_UP) || this.keyboard.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
                 lastfire = System.currentTimeMillis();
                 spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getXPosition(), this.tom.getYPosition() - this.tom.getHeight() / 2, "bullet");
                 fired++;
             }
         }
-        if (this.isKeyDown(KeyEvent.VK_B)) {
+        if (this.keyboard.isKeyDown(KeyEvent.VK_B)) {
             spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5) * 10 + 10, this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
             bouncers++;
         }
-        if ((this.isKeyDown(KeyEvent.VK_DOWN) || this.isKeyDown(KeyEvent.VK_S))) {
+        if ((this.keyboard.isKeyDown(KeyEvent.VK_DOWN) || this.keyboard.isKeyDown(KeyEvent.VK_S))) {
             this.musica.play();
         }
         else {
             this.musica.pause();
         }
-        if ((this.isKeyDownAndRemove(KeyEvent.VK_P) || this.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
+        if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_P) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
             this.pausegame();
         }
-        if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
+        if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(GAME_STATUS.GAME_MENU);
         }
         if (this.obs.getXPosition() < 0) {
@@ -205,22 +205,22 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     @Override
     public void gamePaused() {
         obs.pause();
-        if ((this.isKeyDownAndRemove(KeyEvent.VK_M) || this.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
+        if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(GAME_STATUS.GAME_MENU);
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_SPACE) || this.isKeyDownAndRemove(KeyEvent.VK_P)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_SPACE) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_P)) {
             this.setGameStatus(GAME_STATUS.GAME_RUNNING);
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
             this.pausemenu.incrementHighlight();
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_UP)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_UP)) {
             this.pausemenu.deincrementHighlight();
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ENTER)) {
             this.pausemenu.selectMenuElement();
         }
-        if (this.isKeyDownAndRemove(KeyEvent.VK_S)) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_S)) {
             this.setGameStatus(GAME_STATUS.GAME_STOPPED);
         }
         /*
@@ -338,4 +338,13 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
             }
         }
     }
+
+    public JBasicX_TestingApp() throws HeadlessException {
+        super("windowed");
+    }
+    
+    public static void main(String args[]) {
+        new JBasicX_TestingApp().init();
+    }
+    
 }
