@@ -35,8 +35,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     private int fired = 0;
     private int bouncers = 0;
     private long lastfire = 0;
-    private JHostX host;
-    private JClientX client;
+    //private JHostX host;
+    //private JClientX client;
 
     @Override
     public void onPacket(JPackectX packet) {
@@ -92,14 +92,14 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         obs.setAccel(-10.00);
         obs.setRotation(new Random().nextInt(361));
         obs.setDirection((int) obs.getRotation() + 90);
-        host = new JHostX(4444);
-        host.start();
-        host.addListener(this);
-        System.out.println("Enter IP: ");
-        Scanner in = new Scanner(System.in);
-        client = new JClientX(in.nextLine(), 4444);
-        client.addListener(this);
-        client.start();
+        //host = new JHostX(4444);
+        //host.start();
+        //host.addListener(this);
+        //System.out.println("Enter IP: ");
+        //Scanner in = new Scanner(System.in);
+        //client = new JClientX(in.nextLine(), 4444);
+        //client.addListener(this);
+        //client.start();
 
     }
 
@@ -137,15 +137,15 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     public void gameUpdate() {
         if ((this.keyboard.isKeyDown(KeyEvent.VK_LEFT) || this.keyboard.isKeyDown(KeyEvent.VK_A)) && this.tom.getXPosition() > 10) {
             this.tom.incX(-4);
-            if (!this.host.isListening()) {
+            /*if (!this.host.isListening()) {
                 this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "-4"));
-            }
+            }*/
         }
         if ((this.keyboard.isKeyDown(KeyEvent.VK_RIGHT) || this.keyboard.isKeyDown(KeyEvent.VK_D)) && this.tom.getXPosition() < this.getGameWinWidth() - 10) {
             this.tom.incX(4);
-            if (!this.host.isListening()) {
+            /*if (!this.host.isListening()) {
                 this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "4"));
-            }
+            }*/
         }
         if ((this.keyboard.isKeyDown(KeyEvent.VK_UP) || this.keyboard.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
@@ -340,7 +340,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     }
 
     public JBasicX_TestingApp() throws HeadlessException {
-        super("windowed");
+        super("JBasicTesting Application", "windowed");
     }
     
     public static void main(String args[]) {
