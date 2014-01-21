@@ -13,18 +13,15 @@ import JGameEngineX.*;
 import JIOX.JMenuX.JMenuListenerX;
 import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
-import JNetX.JClientX;
-import JNetX.JHostX;
 import JNetX.JNetworkListenerX;
 import JNetX.JPacketX.JPackectX;
 import JSpriteX.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
-import java.util.Scanner;
 
 public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, JNetworkListenerX {
-
+    
     private JMenuX mainmenu;
     private JMenuX pausemenu;
     private JSpriteHolderX targets;
@@ -339,12 +336,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         }
     }
 
-    public JBasicX_TestingApp() throws HeadlessException {
-        super("JBasicTesting Application", "windowed");
+    public JBasicX_TestingApp(String mode) throws HeadlessException {
+        super("JBasicTesting Application", mode);
     }
     
     public static void main(String args[]) {
-        new JBasicX_TestingApp().init();
+        new JBasicX_TestingApp("windowed").init();
     }
     
 }
