@@ -13,11 +13,17 @@ import JGameEngineX.*;
 import JIOX.JMenuX.JMenuListenerX;
 import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
+import JNetX.JClientX;
+import JNetX.JHostX;
 import JNetX.JNetworkListenerX;
 import JNetX.JPacketX.JPackectX;
+import JNetX.JPacketX.JPacketTypeX;
 import JSpriteX.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Random;
 
 public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, JNetworkListenerX {
@@ -32,19 +38,34 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     private int fired = 0;
     private int bouncers = 0;
     private long lastfire = 0;
-    //private JHostX host;
-    //private JClientX client;
+    private static JHostX host;
+    private static JClientX client;
 
     @Override
     public void onPacket(JPackectX packet) {
         System.out.println("Packet Received:\n\t" + packet.toString());
-        if (packet.getType() == JPackectX.PACKET_TYPE.UPDATE) {
+        if (packet.getType() == JPacketTypeX.UPDATE) {
             try {
-                this.tom.incX(Integer.parseInt((String) packet.getData()[1]));
+                //null for now
             }
             catch (Exception e) {
             }
         }
+    }
+
+    @Override
+    public void onTerminate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onTimeout() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onError() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -75,28 +96,20 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
     public void setup() {
 
-        for (double c = 0; c + images.getDefaultImage().getWidth(null) <= this.getGameWinWidth(); c += images.getDefaultImage().getWidth(null)) {
-            for (double r = 0; r + images.getDefaultImage().getWidth(null) <= this.getGameWinHeight() - 50; r += images.getDefaultImage().getHeight(null)) {
+        for (double c = 0; c + 50 <= this.getGameWinWidth(); c += 50) {
+            for (double r = 0; r + 50 <= this.getGameWinHeight() - 50; r += 50) {
                 targets.addSprite(1, c, r);
             }
         }
 
         tom = new JPictureSpriteX(images.getDefaultImage(), 0, 0);
-        tom.setPosition(this.getGameWinWidthCenter() - this.tom.getWidth() / 2, this.getGameWinHeight() - this.tom.getHeight());
+        tom.setPosition(this.getGameWinWidthCenter() - (this.tom.getWidth() / 2), this.getGameWinHeight() - this.tom.getHeight());
 
         obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         obs.setVel(new Random().nextInt(5) * 10 + 50);
         obs.setAccel(-10.00);
         obs.setRotation(new Random().nextInt(361));
         obs.setDirection((int) obs.getRotation() + 90);
-        //host = new JHostX(4444);
-        //host.start();
-        //host.addListener(this);
-        //System.out.println("Enter IP: ");
-        //Scanner in = new Scanner(System.in);
-        //client = new JClientX(in.nextLine(), 4444);
-        //client.addListener(this);
-        //client.start();
 
     }
 
@@ -234,23 +247,19 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     @Override
     public void gamePaint(Graphics2D g2d) {
         this.tom.draw(g2d);
-        this.resetAffineTransform();
         this.tom.drawBoundsTo(g2d);
-        this.resetAffineTransform();
         this.obs.draw(g2d);
-        this.resetAffineTransform();
         this.obs.drawBoundsTo(g2d);
-        this.resetAffineTransform();
-        targets.drawSpriteBounds(g2d);
         targets.drawSprites(g2d);
-        this.resetAffineTransform();
+        targets.drawSpriteBounds(g2d);
         spriteholder.drawSprites(g2d);
         spriteholder.drawSpriteBounds(g2d);
-        this.resetAffineTransform();
         g2d.drawString("Hits: " + hits, this.getGameWinWidth() - 100, this.getGameWinHeight() - 10);
         g2d.drawString("Fired: " + fired, this.getGameWinWidth() - 200, this.getGameWinHeight() - 10);
         g2d.drawString("Bouncers: " + bouncers, this.getGameWinWidth() - 300, this.getGameWinHeight() - 10);
     }
+    
+    
 
     @Override
     public void gameMenuPaint(Graphics2D g2d) {
@@ -267,7 +276,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     public void gameStoppedPaint(Graphics2D g2d) {
         g2d.drawString("GAME STOPPED", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
         this.drawRecurisive(g2d, this.getGameWinWidthCenter(), this.getGameWinHeightCenter(), 100);
-        this.resetGraphics();
+        g2d.setTransform(new AffineTransform());
         g2d.translate(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
         g2d.scale(0.25, 0.25);
         this.drawRecurisive2(g2d, 5, 5);
@@ -341,7 +350,18 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     }
     
     public static void main(String args[]) {
-        new JBasicX_TestingApp("windowed").init();
+        JBasicX_TestingApp temp = new JBasicX_TestingApp(args.length > 0 ? args[0] : "windowed");
+        temp.init();
+        host = new JHostX(4444);
+        host.start();
+        try {
+            client = new JClientX(InetAddress.getLocalHost(), 4444);
+        }
+        catch (UnknownHostException e) {
+            // !!!
+        }
+        client.addListener(temp);
+        client.start();
     }
     
 }

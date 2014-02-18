@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<jnlp codebase="file:/C:/Users/Ryan/Documents/NetBeansProjects/JBasicX_TestingApp/dist/" href="launch.jnlp" spec="1.0+">
+<jnlp codebase="file:/P:/Git/TestingApp/JBasicX_TestingApp/dist/" href="launch.jnlp" spec="1.0+">
     <information>
         <title>JBasicX_TestingApp</title>
         <vendor>Ryan</vendor>
         <homepage href=""/>
         <description>JBasicX_TestingApp</description>
         <description kind="short">JBasicX_TestingApp</description>
-    <icon href="Owl Icon.jpg" kind="default"/>
-<offline-allowed/>
+    <offline-allowed/>
 </information>
     <update check="background"/>
     <security>
