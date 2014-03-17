@@ -145,13 +145,13 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
     @Override
     public void gameUpdate() {
-        if ((this.keyboard.isKeyDown(KeyEvent.VK_LEFT) || this.keyboard.isKeyDown(KeyEvent.VK_A)) && this.tom.getXPosition() > 10) {
+        if ((this.keyboard.isKeyDown(KeyEvent.VK_LEFT) || this.keyboard.isKeyDown(KeyEvent.VK_A)) && this.tom.getX() > 10) {
             this.tom.incX(-4);
             /*if (!this.host.isListening()) {
                 this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "-4"));
             }*/
         }
-        if ((this.keyboard.isKeyDown(KeyEvent.VK_RIGHT) || this.keyboard.isKeyDown(KeyEvent.VK_D)) && this.tom.getXPosition() < this.getGameWinWidth() - 10) {
+        if ((this.keyboard.isKeyDown(KeyEvent.VK_RIGHT) || this.keyboard.isKeyDown(KeyEvent.VK_D)) && this.tom.getX() < this.getGameWinWidth() - 10) {
             this.tom.incX(4);
             /*if (!this.host.isListening()) {
                 this.client.queuePacket(new JPackectX(JPackectX.PACKET_TYPE.UPDATE, "4"));
@@ -160,7 +160,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if ((this.keyboard.isKeyDown(KeyEvent.VK_UP) || this.keyboard.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
                 lastfire = System.currentTimeMillis();
-                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getXPosition(), this.tom.getYPosition() - this.tom.getHeight() / 2, "bullet");
+                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getX(), this.tom.getY() - this.tom.getHeight() / 2, "bullet");
                 fired++;
             }
         }
@@ -180,25 +180,25 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(GAME_STATUS.GAME_MENU);
         }
-        if (this.obs.getXPosition() < 0) {
+        if (this.obs.getX() < 0) {
             this.obs.setDirection(180 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
-            this.obs.setXPosition(0);
+            this.obs.setX(0);
         }
-        else if (this.obs.getXPosition() > this.getGameWinWidth()) {
+        else if (this.obs.getX() > this.getGameWinWidth()) {
             this.obs.setDirection(180 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
-            this.obs.setXPosition(this.getGameWinWidth());
+            this.obs.setX(this.getGameWinWidth());
         }
-        else if (this.obs.getYPosition() < 0) {
+        else if (this.obs.getY() < 0) {
             this.obs.setDirection(360 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
-            this.obs.setYPosition(0);
+            this.obs.setY(0);
         }
-        else if (this.obs.getYPosition() > this.getGameWinHeight()) {
+        else if (this.obs.getY() > this.getGameWinHeight()) {
             this.obs.setDirection(360 - this.obs.getDirection());
             this.obs.setRotation(this.obs.getDirection() - 90);
-            this.obs.setYPosition(this.getGameWinHeight());
+            this.obs.setY(this.getGameWinHeight());
         }
         JSpriteX temp = this.spriteholder.collidesWithAndRemove(this.obs);
         if (temp != null) {
