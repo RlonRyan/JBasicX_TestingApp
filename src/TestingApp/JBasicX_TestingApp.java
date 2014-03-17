@@ -9,7 +9,8 @@ package TestingApp;
  *
  */
 import JBasicX.JImageHandlerX;
-import JGameEngineX.*;
+import JGameEngineX.JGameEngineX;
+import JGameEngineX.JGameEngineX.GAME_STATUS;
 import JIOX.JMenuX.JMenuListenerX;
 import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
@@ -18,7 +19,9 @@ import JNetX.JHostX;
 import JNetX.JNetworkListenerX;
 import JNetX.JPacketX.JPackectX;
 import JNetX.JPacketX.JPacketTypeX;
-import JSpriteX.*;
+import JSpriteX.JPictureSpriteX;
+import JSpriteX.JSpriteHolderX;
+import JSpriteX.JSpriteX;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
