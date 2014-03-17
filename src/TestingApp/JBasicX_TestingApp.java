@@ -27,7 +27,7 @@ import java.net.UnknownHostException;
 import java.util.Random;
 
 public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, JNetworkListenerX {
-    
+
     private JMenuX mainmenu;
     private JMenuX pausemenu;
     private JSpriteHolderX targets;
@@ -258,8 +258,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         g2d.drawString("Fired: " + fired, this.getGameWinWidth() - 200, this.getGameWinHeight() - 10);
         g2d.drawString("Bouncers: " + bouncers, this.getGameWinWidth() - 300, this.getGameWinHeight() - 10);
     }
-    
-    
+
+
 
     @Override
     public void gameMenuPaint(Graphics2D g2d) {
@@ -348,7 +348,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     public JBasicX_TestingApp(String mode) throws HeadlessException {
         super("JBasicTesting Application", mode);
     }
-    
+
     public static void main(String args[]) {
         JBasicX_TestingApp temp = new JBasicX_TestingApp(args.length > 0 ? args[0] : "windowed");
         temp.init();
@@ -363,5 +363,5 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         client.addListener(temp);
         client.start();
     }
-    
+
 }
