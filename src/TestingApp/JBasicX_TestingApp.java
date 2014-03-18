@@ -168,7 +168,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if ((this.keyboard.isKeyDown(KeyEvent.VK_UP) || this.keyboard.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
                 lastfire = System.currentTimeMillis();
-                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 250, (int)this.tom.getX(), (int)(this.tom.getY() - this.tom.getHeight() / 2), "bullet");
+                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 50, (int)this.tom.getX(), (int)(this.tom.getY() - this.tom.getHeight() / 2), "bullet");
                 fired++;
             }
         }
