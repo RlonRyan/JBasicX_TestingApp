@@ -73,7 +73,9 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
     @Override
     public void gameStart() {
+
         this.setDFPS(100);
+
         images = new JImageHandlerX();
 
         mainmenu = new JMenuX("Main Menu", this.getGameWinWidth() / 4, this.getGameWinHeight() / 4, this.getGameWinWidth() / 2, this.getGameWinHeight() / 2, "Start", "Reset", "Info", "Quit");
@@ -84,31 +86,34 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         pausemenu.addEventListener(this);
 
         musica = new JSoundX();
+
         targets = new JSpriteHolderX(this);
 
-        this.spriteholder.addPicture("/Resources/Bullet.png", "bullet");
-        this.spriteholder.deleteAllSprites();
-        this.targets.deleteAllSprites();
+        spriteholder.addPicture("/Resources/Bullet.png", "bullet");
 
         //  Finally setup the board
         setup();
 
         //  Actual game status
-        this.setGameStatus(GAME_STATUS.GAME_MENU);
+        setGameStatus(GAME_STATUS.GAME_MENU);
+
     }
 
     public void setup() {
 
-        for (double c = 0; c + 50 <= this.getGameWinWidth(); c += 50) {
-            for (double r = 0; r + 50 <= this.getGameWinHeight() - 50; r += 50) {
+        spriteholder.deleteAllSprites();
+        targets.deleteAllSprites();
+
+        for (int c = 25; c + 50 < this.getGameWinWidth(); c += 50) {
+            for (int r = 25; r + 100 < this.getGameWinHeight(); r += 50) {
                 targets.addSprite(1, c, r);
             }
         }
 
         tom = new JPictureSpriteX(images.getDefaultImage(), 0, 0);
-        tom.setPosition(this.getGameWinWidthCenter() - (this.tom.getWidth() / 2), this.getGameWinHeight() - this.tom.getHeight());
+        tom.setPosition((int) (this.getCenterX() - (this.tom.getWidth() / 2)), (int)(this.getGameWinHeight() - this.tom.getHeight() - 25));
 
-        obs = new JPictureSpriteX(images.getDefaultImage(), this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+        obs = new JPictureSpriteX(images.getDefaultImage(), this.getCenterX(), this.getCenterY());
         obs.setVel(new Random().nextInt(5) * 10 + 50);
         obs.setAccel(-10.00);
         obs.setRotation(new Random().nextInt(361));
@@ -163,12 +168,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if ((this.keyboard.isKeyDown(KeyEvent.VK_UP) || this.keyboard.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
                 lastfire = System.currentTimeMillis();
-                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getX(), this.tom.getY() - this.tom.getHeight() / 2, "bullet");
+                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 250, (int)this.tom.getX(), (int)(this.tom.getY() - this.tom.getHeight() / 2), "bullet");
                 fired++;
             }
         }
         if (this.keyboard.isKeyDown(KeyEvent.VK_B)) {
-            spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5) * 10 + 10, this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+            spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5) * 10 + 10, this.getCenterX(), this.getCenterY());
             bouncers++;
         }
         if ((this.keyboard.isKeyDown(KeyEvent.VK_DOWN) || this.keyboard.isKeyDown(KeyEvent.VK_S))) {
@@ -277,10 +282,10 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
     @Override
     public void gameStoppedPaint(Graphics2D g2d) {
-        g2d.drawString("GAME STOPPED", this.getGameWinWidthCenter() - 40, this.getGameWinHeightCenter());
-        this.drawRecurisive(g2d, this.getGameWinWidthCenter(), this.getGameWinHeightCenter(), 100);
+        g2d.drawString("GAME STOPPED", this.getCenterX() - 40, this.getCenterY());
+        this.drawRecurisive(g2d, this.getCenterX(), this.getCenterY(), 100);
         g2d.setTransform(new AffineTransform());
-        g2d.translate(this.getGameWinWidthCenter(), this.getGameWinHeightCenter());
+        g2d.translate(this.getCenterX(), this.getCenterY());
         g2d.scale(0.25, 0.25);
         this.drawRecurisive2(g2d, 5, 5);
     }
