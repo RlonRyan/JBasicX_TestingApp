@@ -14,8 +14,6 @@ import JGameEngineX.JGameEngineX.GAME_STATUS;
 import JIOX.JMenuX.JMenuListenerX;
 import JIOX.JMenuX.JMenuX;
 import JIOX.JSoundX;
-import JNetX.JClientX;
-import JNetX.JHostX;
 import JNetX.JNetworkListenerX;
 import JNetX.JPacketX.JPackectX;
 import JNetX.JPacketX.JPacketTypeX;
@@ -25,6 +23,7 @@ import JSpriteX.JSpriteX;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.util.EventObject;
 import java.util.Random;
 
 public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, JNetworkListenerX {
@@ -74,9 +73,9 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
         this.setDFPS(100);
 
-        images = new JImageHandlerX();
+        images = new JImageHandlerX(this.getClass());
         targets = new JSpriteHolderX(this);
-        musica = new JSoundX();
+        musica = new JSoundX(this.getClass(), "/Resources/Sound.wav");
 
         mainmenu = new JMenuX("Main Menu", (int)this.getGameWinWidth() / 4, (int)this.getGameWinHeight() / 4, (int)this.getGameWinWidth() / 2, (int)this.getGameWinHeight() / 2, "Start", "Reset", "Info", "Quit");
         pausemenu = new JMenuX("Pause Menu", (int)this.getGameWinWidth() / 4, (int)this.getGameWinHeight() / 4, (int)this.getGameWinWidth() / 2, (int)this.getGameWinHeight() / 2, "Resume", "Main Menu");
@@ -87,18 +86,18 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     @Override
     public void gameStart() {
 
-
         mainmenu.addEventListener(this);
         pausemenu.setStyleElement("background", new Color(0, 0, 0, 200));
         pausemenu.addEventListener(this);
 
-        spriteholder.addPicture("/Resources/Bullet.png", "bullet");
+        spriteholder.addImage("bullet", "/Resources/Bullet.png");
 
         //  Finally setup the board
         setup();
 
         //  Actual game status
         setGameStatus(GAME_STATUS.GAME_MENU);
+        this.mainmenu.open();
 
     }
 
@@ -119,9 +118,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         obs = new JPictureSpriteX(images.getDefaultImage(), (int)this.getCenterX(), (int)this.getCenterY());
         obs.setVel(new Random().nextInt(5) * 10 + 50);
         obs.setAccel(-10.00);
-        obs.setRotation(new Random().nextInt(361));
-        obs.setDirection((int) obs.getRotation() + 90);
-
+        obs.setDirection(new Random().nextInt(361));
+        obs.rot();
     }
 
     @Override
@@ -133,6 +131,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         obs.pause();
         if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(GAME_STATUS.GAME_RUNNING);
+            this.mainmenu.close();
         }
         if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
             this.mainmenu.incrementHighlight();
@@ -171,12 +170,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if ((this.keyboard.isKeyDown(KeyEvent.VK_UP) || this.keyboard.isKeyDown(KeyEvent.VK_W))) {
             if (System.currentTimeMillis() - this.lastfire > 250) {
                 lastfire = System.currentTimeMillis();
-                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, (int)this.tom.getX(), (int)(this.tom.getY() - this.tom.getHeight() / 2), "bullet");
+                spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, 270, 100, this.tom.getBounds().getCenterX(), this.tom.getY(), "bullet");
                 fired++;
             }
         }
         if (this.keyboard.isKeyDown(KeyEvent.VK_B)) {
-            spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5) * 10 + 10, (int)this.getCenterX(), (int)this.getCenterY());
+            spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5) * 10 + 10, this.getCenterX(), this.getCenterY());
             bouncers++;
         }
         if ((this.keyboard.isKeyDown(KeyEvent.VK_DOWN) || this.keyboard.isKeyDown(KeyEvent.VK_S))) {
@@ -190,31 +189,32 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         }
         if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(GAME_STATUS.GAME_MENU);
+            this.mainmenu.open();
         }
         if (this.obs.getX() < 0) {
             this.obs.setDirection(180 - this.obs.getDirection());
-            this.obs.setRotation(this.obs.getDirection() - 90);
+            this.obs.rot();
             this.obs.setX(0);
         }
         else if (this.obs.getX() > this.getGameWinWidth()) {
             this.obs.setDirection(180 - this.obs.getDirection());
-            this.obs.setRotation(this.obs.getDirection() - 90);
+            this.obs.rot();
             this.obs.setX(this.getGameWinWidth());
         }
         else if (this.obs.getY() < 0) {
-            this.obs.setDirection(360 - this.obs.getDirection());
-            this.obs.setRotation(this.obs.getDirection() - 90);
+            this.obs.setDirection(180 + this.obs.getDirection());
+            this.obs.rot();
             this.obs.setY(0);
         }
         else if (this.obs.getY() > this.getGameWinHeight()) {
-            this.obs.setDirection(360 - this.obs.getDirection());
-            this.obs.setRotation(this.obs.getDirection() - 90);
+            this.obs.setDirection(180 + this.obs.getDirection());
+            this.obs.rot();
             this.obs.setY(this.getGameWinHeight());
         }
         JSpriteX temp = this.spriteholder.collidesWithAndRemove(this.obs);
         if (temp != null) {
             this.obs.applyForce(temp.getVel(), temp.getDirection());
-            this.obs.setRotation(this.obs.getDirection() - 90);
+            this.obs.rot();
         }
 
         //this.sprholder.updateSprites();
@@ -265,6 +265,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         targets.drawSpriteBounds(g2d);
         spriteholder.drawSprites(g2d);
         spriteholder.drawSpriteBounds(g2d);
+        g2d.setColor(Color.WHITE);
         g2d.drawString("Hits: " + hits, (int)this.getGameWinWidth() - 100, (int)this.getGameWinHeight() - 10);
         g2d.drawString("Fired: " + fired, (int)this.getGameWinWidth() - 200, (int)this.getGameWinHeight() - 10);
         g2d.drawString("Bouncers: " + bouncers, (int)this.getGameWinWidth() - 300, (int)this.getGameWinHeight() - 10);
@@ -306,16 +307,19 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
                     case 0:
                         this.setGameStatus(GAME_STATUS.GAME_RUNNING);
                         this.spriteholder.start();
+                        this.mainmenu.close();
                         break;
                     case 1:
                         this.setup();
                         this.setGameStatus(GAME_STATUS.GAME_RUNNING);
+                        this.mainmenu.close();
                         break;
                     case 2:
                         this.setGameDataVisable(!this.isGameDataVisible());
                         break;
                     case 3:
                         this.setGameStatus(GAME_STATUS.GAME_STOPPED);
+                        this.mainmenu.close();
                         this.stop();
                         System.exit(0);
                         break;
@@ -328,9 +332,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
                     case 0:
                         this.setGameStatus(GAME_STATUS.GAME_RUNNING);
                         this.spriteholder.start();
+                        this.pausemenu.close();
                         break;
                     case 1:
                         this.setGameStatus(GAME_STATUS.GAME_MENU);
+                        this.pausemenu.close();
+                        this.mainmenu.open();
                 }
         }
     }
@@ -364,7 +371,8 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         JBasicX_TestingApp temp = new JBasicX_TestingApp(args.length > 0 ? args[0] : "windowed");
         temp.init();
         temp.start();
-        /*host = new JHostX(4444);
+        /*
+        host = new JHostX(4444);
         host.start();
         try {
             client = new JClientX(InetAddress.getLocalHost(), 4444);
@@ -375,6 +383,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         client.addListener(temp);
         client.start();
         */
+    }
+
+    @Override
+    public void lostFocus(EventObject e) {
+        super.lostFocus(e);
+        pausemenu.open();
     }
 
 }
