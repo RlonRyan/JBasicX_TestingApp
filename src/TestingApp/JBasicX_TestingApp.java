@@ -129,9 +129,13 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     @Override
     public void gameMenu() {
         obs.pause();
-        if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M)) {
             this.setGameStatus(GAME_STATUS.GAME_RUNNING);
+            this.spriteholder.start();
             this.mainmenu.close();
+        }
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE)) {
+            System.exit(0);
         }
         if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
             this.mainmenu.incrementHighlight();
@@ -185,11 +189,18 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
             this.musica.pause();
         }
         if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_P) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_SPACE))) {
+            this.pausemenu.open();
             this.pausegame();
         }
         if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
             this.setGameStatus(GAME_STATUS.GAME_MENU);
             this.mainmenu.open();
+        }
+        if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_C)) {
+            for(int i = 0; i < 1000; i++) {
+                spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, new Random().nextInt(361), new Random().nextInt(5) * 10 + 10, this.getCenterX(), this.getCenterY());
+                bouncers++;
+            }
         }
         if (this.obs.getX() < 0) {
             this.obs.setDirection(180 - this.obs.getDirection());
@@ -215,11 +226,13 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         if (temp != null) {
             this.obs.applyForce(temp.getVel(), temp.getDirection());
             this.obs.rot();
+            if(temp.getType() == spriteholder.SPRITE_BOUNCER) {
+                this.bouncers -= 1;
+            }
         }
 
-        //this.sprholder.updateSprites();
         this.obs.update();
-        //hits += spriteholder.checkCollisionsWith(obs);
+        
         hits += targets.checkCollisionsWithAndRemove(obs);
     }
 
@@ -227,9 +240,12 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
     public void gamePaused() {
         obs.pause();
         if ((this.keyboard.isKeyDownAndRemove(KeyEvent.VK_M) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_ESCAPE))) {
+            this.pausemenu.close();
+            this.mainmenu.open();
             this.setGameStatus(GAME_STATUS.GAME_MENU);
         }
         if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_SPACE) || this.keyboard.isKeyDownAndRemove(KeyEvent.VK_P)) {
+            this.pausemenu.close();
             this.setGameStatus(GAME_STATUS.GAME_RUNNING);
         }
         if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_DOWN)) {
@@ -242,6 +258,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
             this.pausemenu.selectMenuElement();
         }
         if (this.keyboard.isKeyDownAndRemove(KeyEvent.VK_S)) {
+            this.pausemenu.close();
             this.setGameStatus(GAME_STATUS.GAME_STOPPED);
         }
         /*
@@ -265,23 +282,33 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
         targets.drawSpriteBounds(g2d);
         spriteholder.drawSprites(g2d);
         spriteholder.drawSpriteBounds(g2d);
+        g2d.setColor(new Color(255, 255, 255, 100));
+        g2d.fillRoundRect(10, (int)this.getGameWinHeight() - 25, (int)this.getGameWinWidth() - 25, 25, 5, 5);
+        g2d.setColor(Color.WHITE);
+        g2d.drawRoundRect(10, (int)this.getGameWinHeight() - 25, (int)this.getGameWinWidth() - 25, 25, 5, 5);
         g2d.setColor(Color.WHITE);
         g2d.drawString("Hits: " + hits, (int)this.getGameWinWidth() - 100, (int)this.getGameWinHeight() - 10);
         g2d.drawString("Fired: " + fired, (int)this.getGameWinWidth() - 200, (int)this.getGameWinHeight() - 10);
         g2d.drawString("Bouncers: " + bouncers, (int)this.getGameWinWidth() - 300, (int)this.getGameWinHeight() - 10);
     }
 
-
-
     @Override
     public void gameMenuPaint(Graphics2D g2d) {
         mainmenu.draw(g2d);
+        g2d.setColor(new Color(255, 255, 255, 100));
+        g2d.fillRoundRect(10, (int)this.getGameWinHeight() - 25, (int)this.getGameWinWidth() - 25, 25, 5, 5);
+        g2d.setColor(Color.WHITE);
+        g2d.drawRoundRect(10, (int)this.getGameWinHeight() - 25, (int)this.getGameWinWidth() - 25, 25, 5, 5);
     }
 
     @Override
     public void gamePausePaint(Graphics2D g2d) {
         gamePaint(g2d);
         pausemenu.draw(g2d);
+        g2d.setColor(new Color(255, 255, 255, 100));
+        g2d.fillRoundRect(10, (int)this.getGameWinHeight() - 25, (int)this.getGameWinWidth() - 25, 25, 5, 5);
+        g2d.setColor(Color.WHITE);
+        g2d.drawRoundRect(10, (int)this.getGameWinHeight() - 25, (int)this.getGameWinWidth() - 25, 25, 5, 5);
     }
 
     @Override
@@ -296,7 +323,7 @@ public class JBasicX_TestingApp extends JGameEngineX implements JMenuListenerX, 
 
     @Override
     public void elementHighlighted(Object source, int... data) {
-        System.out.println("Highlighted Element: " + data[0]);
+        //System.out.println("Highlighted Element: " + data[0]);
     }
 
     @Override
