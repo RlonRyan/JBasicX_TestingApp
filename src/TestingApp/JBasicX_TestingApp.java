@@ -30,7 +30,9 @@ public class JBasicX_TestingApp {
 
         instance = new JGameEngineX(title, mode, fps, width, height);
         
-        instance.registerGameMode("main_menu", new Main_Menu());
+        instance.registerGameMode("main_menu", new Main_Menu(instance));
+        
+        instance.setGameMode("main_menu");
         
         instance.start();
 

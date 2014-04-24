@@ -10,6 +10,8 @@ import JGameEngineX.JGameModeX.JGameModeX;
 import JIOX.JMenuX.JMenuX;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.Method;
 
 /**
  *
@@ -23,14 +25,20 @@ public class Main_Menu extends JGameModeX {
 
         super("Main_Menu", holder);
 
-        menu = new JMenuX("Main Menu", 160, 120, 320, 240, "Start");
-        try {
-            holder.bind("Main_Menu", "KeyEvent", menu.getClass().getMethod("deincrementHighlight"), menu);
-        } catch (Exception e) {
-
-        }
+        menu = new JMenuX("Main Menu", 160, 120, 320, 240, "Start", "1", "2", "3");
+        
     }
 
+    @Override
+    public void registerBindings() {
+        try {
+            Method m = menu.getClass().getMethod("incrementHighlight");
+            holder.bind("main_menu", MouseEvent.class.getName(), m, menu);
+        } catch (NoSuchMethodException | SecurityException e) {
+            System.err.println("Fail: " + e.getLocalizedMessage());
+        }
+    }
+    
     @Override
     public void start() {
         menu.open();
@@ -38,7 +46,8 @@ public class Main_Menu extends JGameModeX {
 
     @Override
     public void update() {
-
+        // Update...
+        this.menu.open();
     }
 
     @Override
