@@ -31,12 +31,12 @@ public class JBasicX_TestingApp {
 
         instance = new JGameEngineX(title, mode, fps, width, height);
         
-        instance.registerGameMode("main_menu", new Main_Menu(instance));
-        instance.registerGameMode("main_game", new Main_Game(instance));
+        instance.registerGameMode(new Main_Menu(instance));
+        instance.registerGameMode(new Main_Game(instance));
         
-        instance.setGameMode("main_menu");
+        instance.init();
         
-        instance.start();
+        instance.start("main_menu");
 
     }
 

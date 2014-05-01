@@ -18,29 +18,34 @@ import java.lang.reflect.Method;
  */
 public class Main_Menu extends JGameModeX {
 
-    private final JMenuX menu;
+    private JMenuX menu;
 
     public Main_Menu(JGameEngineX holder) {
 
         super("Main_Menu", holder);
-
-        menu = new JMenuX("Main Menu", 160, 120, 320, 240, "Start", "1", "2", "3");
         
     }
+
+    @Override
+    public void init() {
+        menu = new JMenuX("Main Menu", 160, 120, 320, 240, "Start", "1", "2", "3");
+    }
+    
+    
 
     @Override
     public void registerBindings() {
         try {
             Method m = menu.getClass().getMethod("incrementHighlight");
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, m, menu);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, m, menu);
             m = menu.getClass().getMethod("incrementHighlight", int.class);
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, m, menu, -1);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, m, menu, -1);
             m = menu.getClass().getMethod("incrementHighlight");
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, menu);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, menu);
             m = System.out.getClass().getMethod("println", String.class);
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, m, System.out, "Keypress!");
+            holder.bind(name, KeyEvent.KEY_PRESSED, m, System.out, "Keypress!");
             m = holder.getClass().getMethod("setGameMode", String.class);
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, holder, "main_game");
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, holder, "main_game");
         } catch (NoSuchMethodException | SecurityException e) {
             System.err.println("Fail: " + e.getLocalizedMessage());
         }

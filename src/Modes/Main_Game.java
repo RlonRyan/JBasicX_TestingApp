@@ -11,7 +11,6 @@ import JSpriteX.JPictureSpriteX;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -23,30 +22,36 @@ public class Main_Game extends JGameModeX {
 
     public Main_Game(JGameEngineX holder) {
         super("Main_Game", holder);
-        hero = new JPictureSpriteX(null, 0, 0);
+    }
+
+    @Override
+    public void init() {
+        hero = new JPictureSpriteX(holder.images.getDefaultImage(), 0, 0);
     }
 
     @Override
     public void registerBindings() {
         try {
-            Method m = hero.getClass().getMethod("incY");
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, m, hero, 10);
-            m = hero.getClass().getMethod("incY", int.class);
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, m, hero, -10);
-            m = hero.getClass().getMethod("incX");
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_RIGHT, m, hero, 10);
-            m = hero.getClass().getMethod("incX", int.class);
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_LEFT, m, hero, -10);
+            Method m = hero.getClass().getMethod("incY", double.class);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, m, hero, -10);
+            m = hero.getClass().getMethod("incY", double.class);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, m, hero, 10);
+            m = hero.getClass().getMethod("incX", double.class);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_RIGHT, m, hero, 10);
+            m = hero.getClass().getMethod("incX", double.class);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_LEFT, m, hero, -10);
+            m = holder.getClass().getMethod("setGameMode", String.class);
+            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, holder, "main_menu");
             m = System.out.getClass().getMethod("println", String.class);
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, m, System.out, "Keypress!");
+            holder.bind(name, KeyEvent.KEY_PRESSED, m, System.out, "Keypress!");
         } catch (NoSuchMethodException | SecurityException e) {
-            System.err.println("Fail: " + e.getLocalizedMessage());
+            System.err.println("There was an issue binding the function: " + e.getLocalizedMessage());
         }
     }
 
     @Override
     public void start() {
-        hero.setVel(10);
+        // Nothing for now...
     }
 
     @Override
