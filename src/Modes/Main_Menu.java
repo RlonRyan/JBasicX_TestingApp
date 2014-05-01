@@ -8,10 +8,8 @@ package Modes;
 import JGameEngineX.JGameEngineX;
 import JGameEngineX.JGameModeX.JGameModeX;
 import JIOX.JMenuX.JMenuX;
-import java.awt.AWTEvent;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 
 /**
@@ -33,14 +31,16 @@ public class Main_Menu extends JGameModeX {
     @Override
     public void registerBindings() {
         try {
-            Method m = menu.getClass().getMethod("incrementHighlight", int.class);
-            holder.bind("main_menu", KeyEvent.VK_DOWN, m, menu, -1);
+            Method m = menu.getClass().getMethod("incrementHighlight");
+            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, m, menu);
+            m = menu.getClass().getMethod("incrementHighlight", int.class);
+            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, m, menu, -1);
             m = menu.getClass().getMethod("incrementHighlight");
-            holder.bind("main_menu", MouseEvent.MOUSE_CLICKED, m, menu);
-            m = menu.getClass().getMethod("selectMenuElement");
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, m, menu);
+            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, menu);
             m = System.out.getClass().getMethod("println", String.class);
-            holder.bind("main_menu", KeyEvent.KEY_PRESSED, m, System.out, "keypress");
+            holder.bind("main_menu", KeyEvent.KEY_PRESSED, m, System.out, "Keypress!");
+            m = holder.getClass().getMethod("setGameMode", String.class);
+            holder.bind("main_menu", KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, holder, "main_game");
         } catch (NoSuchMethodException | SecurityException e) {
             System.err.println("Fail: " + e.getLocalizedMessage());
         }

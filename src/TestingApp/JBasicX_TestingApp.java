@@ -1,6 +1,7 @@
 package TestingApp;
 
 import JGameEngineX.JGameEngineX;
+import Modes.Main_Game;
 import Modes.Main_Menu;
 
 /**
@@ -31,6 +32,7 @@ public class JBasicX_TestingApp {
         instance = new JGameEngineX(title, mode, fps, width, height);
         
         instance.registerGameMode("main_menu", new Main_Menu(instance));
+        instance.registerGameMode("main_game", new Main_Game(instance));
         
         instance.setGameMode("main_menu");
         
