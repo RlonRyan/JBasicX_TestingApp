@@ -7,10 +7,12 @@ package Modes;
 
 import JGameEngineX.JGameEngineX;
 import JGameEngineX.JGameModeX.JGameModeX;
+import JIOX.JMenuX.JMenuElementX.JMenuTextElementX;
 import JIOX.JMenuX.JMenuX;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Method;
+import java.util.Random;
 
 /**
  *
@@ -23,34 +25,28 @@ public class Main_Menu extends JGameModeX {
     public Main_Menu(JGameEngineX holder) {
 
         super("Main_Menu", holder);
-        
+
     }
 
     @Override
     public void init() {
-        menu = new JMenuX("Main Menu", 160, 120, 320, 240, "Start", "1", "2", "3");
+        menu = new JMenuX("Main Menu", 160, 120, 320, 240);
+        menu.addMenuElement(new JMenuTextElementX("Start", () -> (holder.setGameMode("main_game"))));
+        menu.addMenuElement(new JMenuTextElementX("Toggle Game Data", () -> (holder.toggleGameDataVisable())));
+        menu.addMenuElement(new JMenuTextElementX("Randomize!", () -> (holder.setBackgroundColor(new Color(new Random().nextInt(256),new Random().nextInt(256),new Random().nextInt(256))))));
+        menu.addMenuElement(new JMenuTextElementX("Reset!", () -> (holder.setBackgroundColor(Color.BLACK))));
+        menu.addMenuElement(new JMenuTextElementX("Quit", () -> (System.exit(0))));
     }
-    
-    
 
     @Override
     public void registerBindings() {
-        try {
-            Method m = menu.getClass().getMethod("incrementHighlight");
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, m, menu);
-            m = menu.getClass().getMethod("incrementHighlight", int.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, m, menu, -1);
-            m = menu.getClass().getMethod("incrementHighlight");
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, menu);
-            m = System.out.getClass().getMethod("println", String.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, m, System.out, "Keypress!");
-            m = holder.getClass().getMethod("setGameMode", String.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, holder, "main_game");
-        } catch (NoSuchMethodException | SecurityException e) {
-            System.err.println("Fail: " + e.getLocalizedMessage());
-        }
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, (e) -> (menu.incrementHighlight()));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> (menu.deincrementHighlight()));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> (menu.selectMenuElement()));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (System.exit(0)));
+        bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + ((KeyEvent) e).getKeyChar() + " detected with lambda!")));
     }
-    
+
     @Override
     public void start() {
         menu.open();

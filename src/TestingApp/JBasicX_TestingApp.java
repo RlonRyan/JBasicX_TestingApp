@@ -3,6 +3,7 @@ package TestingApp;
 import JGameEngineX.JGameEngineX;
 import Modes.Main_Game;
 import Modes.Main_Menu;
+import java.util.Random;
 
 /**
  * @author RlonRyan
@@ -15,6 +16,7 @@ import Modes.Main_Menu;
 public class JBasicX_TestingApp {
 
     public static JGameEngineX instance;
+    public static final String[] options = {"Lambda Style!", "Javaaa!", "Spaaaaaace!", "Generic!", "Automated!", "Title goes here."};
 
     public static void main(String args[]) {
 
@@ -22,14 +24,13 @@ public class JBasicX_TestingApp {
             return;
         }
 
-        String title = args.length >= 1 ? args[0] : "JGameX";
-        String mode = args.length >= 2 ? args[1] : "Windowed";
+        String mode = args.length >= 1 ? args[0] : "windowed";
         
         int fps = args.length >= 3 ? Integer.parseInt(args[2]) : 100;
         int width = args.length >= 4 ? Integer.parseInt(args[3]) : 640;
         int height = args.length >= 5 ? Integer.parseInt(args[4]) : 480;
 
-        instance = new JGameEngineX(title, mode, fps, width, height);
+        instance = new JGameEngineX("JBasicX Testing Application: " + options[new Random().nextInt(options.length)], mode, fps, width, height);
         
         instance.registerGameMode(new Main_Menu(instance));
         instance.registerGameMode(new Main_Game(instance));

@@ -10,7 +10,6 @@ import JGameEngineX.JGameModeX.JGameModeX;
 import JSpriteX.JPictureSpriteX;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Method;
 
 /**
  *
@@ -26,27 +25,20 @@ public class Main_Game extends JGameModeX {
 
     @Override
     public void init() {
-        hero = new JPictureSpriteX(holder.images.getDefaultImage(), 0, 0);
+        hero = new JPictureSpriteX(holder.images.getDefaultImage(), holder.getDimensions().getCenterX(), holder.getDimensions().getCenterY());
     }
 
     @Override
     public void registerBindings() {
-        try {
-            Method m = hero.getClass().getMethod("incY", double.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, m, hero, -10);
-            m = hero.getClass().getMethod("incY", double.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, m, hero, 10);
-            m = hero.getClass().getMethod("incX", double.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_RIGHT, m, hero, 10);
-            m = hero.getClass().getMethod("incX", double.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_LEFT, m, hero, -10);
-            m = holder.getClass().getMethod("setGameMode", String.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, m, holder, "main_menu");
-            m = System.out.getClass().getMethod("println", String.class);
-            holder.bind(name, KeyEvent.KEY_PRESSED, m, System.out, "Keypress!");
-        } catch (NoSuchMethodException | SecurityException e) {
-            System.err.println("There was an issue binding the function: " + e.getLocalizedMessage());
-        }
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (holder.setGameMode("main_menu")));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e)->(hero.incY(-10)));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, (e)->(hero.incY(10)));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_LEFT, (e)->(hero.incX(-10)));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_RIGHT, (e)->(hero.incX(10)));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_W, (e)->(hero.incY(-10)));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_S, (e)->(hero.incY(10)));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_A, (e)->(hero.incX(-10)));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_D, (e)->(hero.incX(10)));
     }
 
     @Override
