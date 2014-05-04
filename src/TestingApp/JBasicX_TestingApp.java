@@ -29,7 +29,6 @@ public class JBasicX_TestingApp {
         int fps = args.length >= 3 ? Integer.parseInt(args[2]) : 100;
         int width = args.length >= 4 ? Integer.parseInt(args[3]) : 640;
         int height = args.length >= 5 ? Integer.parseInt(args[4]) : 480;
-
         instance = new JGameEngineX("JBasicX Testing Application: " + options[new Random().nextInt(options.length)], mode, fps, width, height);
         
         instance.registerGameMode(new Main_Menu(instance));

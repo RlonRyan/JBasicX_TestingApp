@@ -12,6 +12,7 @@ import JIOX.JMenuX.JMenuX;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 /**
@@ -36,6 +37,7 @@ public class Main_Menu extends JGameModeX {
         menu.addMenuElement(new JMenuTextElementX("Randomize!", () -> (holder.setBackgroundColor(new Color(new Random().nextInt(256),new Random().nextInt(256),new Random().nextInt(256))))));
         menu.addMenuElement(new JMenuTextElementX("Reset!", () -> (holder.setBackgroundColor(Color.BLACK))));
         menu.addMenuElement(new JMenuTextElementX("Quit", () -> (System.exit(0))));
+        menu.setBoundsVisable(true);
     }
 
     @Override
@@ -44,7 +46,9 @@ public class Main_Menu extends JGameModeX {
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> (menu.deincrementHighlight()));
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> (menu.selectMenuElement()));
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (System.exit(0)));
-        bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + ((KeyEvent) e).getKeyChar() + " detected with lambda!")));
+        bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + KeyEvent.getKeyText(((KeyEvent)e).getKeyCode()) + " detected with lambda!")));
+        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (menu.selectMenuElement(((MouseEvent) e).getPoint())));
+        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (System.out.println("Mousepress!")));
     }
 
     @Override
