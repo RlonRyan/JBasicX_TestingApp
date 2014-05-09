@@ -3,6 +3,7 @@ package TestingApp;
 import JGameEngineX.JGameEngineX;
 import Modes.Main_Game;
 import Modes.Main_Menu;
+import Modes.Pause_Menu;
 import java.util.Random;
 
 /**
@@ -33,6 +34,7 @@ public class JBasicX_TestingApp {
         
         instance.registerGameMode(new Main_Menu(instance));
         instance.registerGameMode(new Main_Game(instance));
+        instance.registerGameMode(new Pause_Menu(instance));
         
         instance.init();
         
