@@ -1,4 +1,5 @@
-/build/
-/nbproject/private/
+/build/*
+/nbproject/private/*
+
 *.xml
 *.properties

@@ -33,7 +33,7 @@ public class Main_Game extends JGameModeX {
     @Override
     public void registerBindings() {
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (holder.setGameMode("pause_menu")));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, (e) -> (holder.spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, hero.getDirection(), hero.getVel() + 100, hero.getX(), hero.getY(), "bullet")));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, (e) -> (holder.spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, hero.getDirection(), hero.getVel() + 100, hero.getBounds().getCenterX(), hero.getBounds().getCenterY(), "bullet")));
     }
     
     @Override
@@ -44,6 +44,7 @@ public class Main_Game extends JGameModeX {
     
     @Override
     public void update() {
+        
         int theta = (int) Math.toDegrees(Math.atan2(hero.getBounds().getCenterY() - holder.mouse.getY(), hero.getBounds().getCenterX() - holder.mouse.getX()));
         
         this.hero.setRotation(theta + 90);
@@ -56,6 +57,7 @@ public class Main_Game extends JGameModeX {
     
     @Override
     public void pause() {
+        
         hero.pause();
         holder.spriteholder.pauseAll();
     }
