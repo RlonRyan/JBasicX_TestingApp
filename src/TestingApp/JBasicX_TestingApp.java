@@ -1,6 +1,7 @@
 package TestingApp;
 
 import JGameEngineX.JGameEngineX;
+import JNetX.JHostX;
 import Modes.Main_Game;
 import Modes.Main_Menu;
 import Modes.Pause_Menu;
@@ -14,7 +15,7 @@ import java.util.Random;
  * @info Powered by JBasicX
  *
  */
-public class JBasicX_TestingApp {
+public class JBasicX_TestingApp{
 
     public static JGameEngineX instance;
     public static final String[] options = {"Lambda Style!", "Javaaa!", "Spaaaaaace!", "Generic!", "Automated!", "Title goes here."};
@@ -39,7 +40,11 @@ public class JBasicX_TestingApp {
         instance.init();
         
         instance.start("main_menu");
-
+        
+        JHostX host = new JHostX(7654);
+        host.addListener((Main_Game)instance.getGameMode("main_game"));
+        host.run();
+        
     }
 
 }
