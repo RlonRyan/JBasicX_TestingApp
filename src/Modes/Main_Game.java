@@ -7,10 +7,6 @@ package Modes;
 
 import JGameEngineX.JGameEngineX;
 import JGameEngineX.JGameModeX.JGameModeX;
-import JNetX.JNetEventX.JNetEventTypeX;
-import JNetX.JNetworkListenerX;
-import JNetX.JPacketX.JPackectX;
-import JNetX.JPacketX.JPacketTypeX;
 import JSpriteX.JPictureSpriteX;
 import JSpriteX.JSpriteHolderX;
 import java.awt.Graphics2D;
@@ -20,7 +16,7 @@ import java.awt.event.KeyEvent;
  *
  * @author RlonRyan
  */
-public class Main_Game extends JGameModeX implements JNetworkListenerX {
+public class Main_Game extends JGameModeX {
     
     public JPictureSpriteX hero;
     
@@ -82,14 +78,6 @@ public class Main_Game extends JGameModeX implements JNetworkListenerX {
     public void paintGameData(Graphics2D g2d) {
         holder.spriteholder.paintSpriteBounds(g2d);
         hero.paintBounds(g2d);
-    }
-
-    @Override
-    public void onPacket(JPackectX packet) {
-        switch(packet.getType()){
-            case MESSAGE:
-                System.out.print("Got a message!");
-        };
     }
     
 }

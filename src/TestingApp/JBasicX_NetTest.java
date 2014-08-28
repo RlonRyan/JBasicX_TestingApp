@@ -3,8 +3,6 @@
  */
 package TestingApp;
 
-import JNetX.JClientX;
-import JNetX.JNetworkListenerX;
 import JNetX.JPacketX.JPackectX;
 import JNetX.JPacketX.JPacketFieldX;
 import JNetX.JPacketX.JPacketTypeX;
@@ -14,13 +12,11 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,56 +30,16 @@ import java.util.logging.Logger;
  *
  * @author Ryan
  */
-public class JBasicX_NetTest extends Thread implements JNetworkListenerX {
+public class JBasicX_NetTest {
 
-    /**
-     *
-     */
     public final int port;
 
-    /**
-     *
-     */
     public final List<InetAddress> clients;
 
-    /**
-     * 7654 7655
-     */
-    @Override
-    public void run() {
-        JClientX clientX;
-
-        try {
-            clientX = new JClientX(InetAddress.getByName(""), 7654);
-        } catch (UnknownHostException e) {
-            return;
-        }
-
-        clientX.addListener(this);
-        clientX.start();
-
-        String cmd = "";
-        Scanner reader = new Scanner(System.in);
-
-        while (!cmd.equalsIgnoreCase("quit")) {
-            cmd = reader.nextLine();
-            JPackectX packet;
-
-            switch (cmd.length()) {
-                case 1:
-                    packet = new JPackectX(JPacketTypeX.UPDATE);
-                    packet.set(JPacketFieldX.KEY, cmd.getBytes());
-                    System.out.println(Arrays.toString(cmd.getBytes()));
-                    clientX.sendPacket(packet);
-                    break;
-                default:
-                    packet = new JPackectX(JPacketTypeX.MESSAGE);
-                    packet.set(JPacketFieldX.MESSAGE, cmd.getBytes());
-                    clientX.sendPacket(packet);
-                    break;
-            }
-        }
-    }
+    static int x = 100;
+    static int y = 100;
+    static DatagramPacket packet;
+    static JPackectX p = new JPackectX(JPacketTypeX.LOGON);
 
     /**
      *
@@ -98,6 +54,7 @@ public class JBasicX_NetTest extends Thread implements JNetworkListenerX {
         DatagramSocket socket;
         String desired, external;
         InetAddress address;
+        Timer t;
 
         try {
             URL checkip = new URL("http://checkip.amazonaws.com/");
@@ -115,23 +72,39 @@ public class JBasicX_NetTest extends Thread implements JNetworkListenerX {
 
         try {
             socket = new DatagramSocket(7655, address);
-            DatagramPacket packet;
-            JPackectX p = new JPackectX(JPacketTypeX.LOGON);
-            
             socket.send(p.convert(address, 7654, (byte) 0, null, (byte) 0));
+            t = new Timer();
+            t.scheduleAtFixedRate(new TimerTask() {
 
-            // get a few quotes
-            for (int i = 0; i < 5; i++) {
+                @Override
+                public void run() {
+                    p = new JPackectX(JPacketTypeX.UPDATE);
+                    p.set(JPacketFieldX.XPOS, JPackectX.toBytes(x));
+                    p.set(JPacketFieldX.YPOS, JPackectX.toBytes(y));
+                    x += 10;
+                    y += 10;
+                    DatagramPacket pack = p.convert(address, 7654, (byte) 1, null, (byte) 1);
+                    System.out.println(JPackectX.packetToString(pack));
+                    //System.out.println(Arrays.toString(pack.getData()));
+                    try {
+                        socket.send(pack);
+                    } catch (IOException e) {
+                    }
+                }
+            }, 1000, 100);
 
+            socket.setSoTimeout(10000);
+
+            while (x < 540) {
                 byte[] buf = new byte[256];
                 packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
-                p = new JPackectX(packet);
             }
 
             p = new JPackectX(JPacketTypeX.LOGOFF);
             socket.send(p.convert(address, 7654, (byte) 0, null, (byte) 0));
             socket.close();
+            t.cancel();
         } catch (IOException e) {
             e.printStackTrace();
             return;

@@ -33,6 +33,8 @@ public class Main_Menu extends JGameModeX {
     public void init() {
         menu = new JMenuX("Main Menu", 160, 120, 320, 240);
         menu.addMenuElement(new JMenuTextElementX("Start", () -> (holder.setGameMode("main_game"))));
+        menu.addMenuElement(new JMenuTextElementX("Network", () -> (holder.setGameMode("network_controller"))));
+        menu.addMenuElement(new JMenuTextElementX("Remote", () -> (holder.setGameMode("remote_control"))));
         menu.addMenuElement(new JMenuTextElementX("Toggle Game Data", () -> (holder.toggleGameDataVisable())));
         menu.addMenuElement(new JMenuTextElementX("Randomize!", () -> (holder.setBackgroundColor(new Color(new Random().nextInt(256),new Random().nextInt(256),new Random().nextInt(256))))));
         menu.addMenuElement(new JMenuTextElementX("Reset!", () -> (holder.setBackgroundColor(Color.BLACK))));
