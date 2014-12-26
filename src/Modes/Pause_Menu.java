@@ -28,11 +28,12 @@ public class Pause_Menu extends JGameModeX {
     }
 
     @Override
-    public void init() {
+    public boolean init() {
         menu = new JMenuX("Pause Menu", 160, 120, 320, 240);
         menu.addMenuElement(new JMenuTextElementX("Main Menu", () -> (holder.setGameMode("main_menu"))));
         menu.addMenuElement(new JMenuTextElementX("Toggle Game Data", () -> (holder.toggleGameDataVisable())));
-        menu.addMenuElement(new JMenuTextElementX("Resume", () -> (holder.setGameMode("main_game"))));
+        menu.addMenuElement(new JMenuTextElementX("Resume", () -> (holder.previousGameMode())));
+        return true;
     }
 
     @Override
@@ -40,10 +41,10 @@ public class Pause_Menu extends JGameModeX {
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, (e) -> (menu.incrementHighlight()));
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> (menu.deincrementHighlight()));
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> (menu.selectMenuElement()));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (holder.setGameMode("main_game")));
-        bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + KeyEvent.getKeyText(((KeyEvent) e).getKeyCode()) + " detected with lambda!")));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (holder.previousGameMode()));
+        //bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + KeyEvent.getKeyText(((KeyEvent) e).getKeyCode()) + " detected with lambda!")));
         bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (menu.selectMenuElement(((MouseEvent) e).getPoint())));
-        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (System.out.println("Mousepress!")));
+        //bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (System.out.println("Mousepress!")));
     }
 
     @Override

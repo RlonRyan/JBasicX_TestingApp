@@ -39,7 +39,7 @@ public class Network_Controller extends JGameModeX {
     }
 
     @Override
-    public void init() {
+    public boolean init() {
         hero = new JPictureSpriteX(holder.images.getDefaultImage(), holder.getDimensions().getCenterX(), holder.getDimensions().getCenterY());
         holder.spriteholder.addImage("bullet", "/resources/bullet.png");
         menu = new JMenuX("Network", 160, 120, 320, 240);
@@ -84,8 +84,10 @@ public class Network_Controller extends JGameModeX {
                 });
             } catch (IOException e) {
                 Logger.getLogger("Network").log(Level.SEVERE, "Failed to start network connection!");
+                return false;
             }
         }
+        return true;
     }
 
     @Override

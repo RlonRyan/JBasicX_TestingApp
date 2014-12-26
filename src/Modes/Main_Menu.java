@@ -30,15 +30,17 @@ public class Main_Menu extends JGameModeX {
     }
 
     @Override
-    public void init() {
+    public boolean init() {
         menu = new JMenuX("Main Menu", 160, 120, 320, 240);
         menu.addMenuElement(new JMenuTextElementX("Start", () -> (holder.setGameMode("main_game"))));
         menu.addMenuElement(new JMenuTextElementX("Network", () -> (holder.setGameMode("network_controller"))));
         menu.addMenuElement(new JMenuTextElementX("Remote", () -> (holder.setGameMode("remote_control"))));
         menu.addMenuElement(new JMenuTextElementX("Toggle Game Data", () -> (holder.toggleGameDataVisable())));
-        menu.addMenuElement(new JMenuTextElementX("Randomize!", () -> (holder.setBackgroundColor(new Color(new Random().nextInt(256),new Random().nextInt(256),new Random().nextInt(256))))));
+        menu.addMenuElement(new JMenuTextElementX("Randomize!", () -> (holder.setBackgroundColor(new Color(new Random().nextInt(256), new Random().nextInt(256), new Random().nextInt(256))))));
         menu.addMenuElement(new JMenuTextElementX("Reset!", () -> (holder.setBackgroundColor(Color.BLACK))));
         menu.addMenuElement(new JMenuTextElementX("Quit", () -> (System.exit(0))));
+
+        return true;
     }
 
     @Override
@@ -47,9 +49,17 @@ public class Main_Menu extends JGameModeX {
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> (menu.deincrementHighlight()));
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> (menu.selectMenuElement()));
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (System.exit(0)));
-        bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + KeyEvent.getKeyText(((KeyEvent)e).getKeyCode()) + " detected with lambda!")));
+        bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + KeyEvent.getKeyText(((KeyEvent) e).getKeyCode()) + " detected with lambda!")));
         bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (menu.selectMenuElement(((MouseEvent) e).getPoint())));
         bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (System.out.println("Mousepress!")));
+
+        //Hackish... But nessacary.
+        if (!this.holder.hasGameMode("network_controller")) {
+            this.menu.removeElement(this.menu.findElementContaining("Network"));
+        }
+        if (!this.holder.hasGameMode("remote_control")) {
+            this.menu.removeElement(this.menu.findElementContaining("Remote"));
+        }
     }
 
     @Override
@@ -79,7 +89,7 @@ public class Main_Menu extends JGameModeX {
             menu.paintBounds(g2d);
         }
     }
-    
+
     @Override
     public void paintGameData(Graphics2D g2d) {
         menu.paintBounds(g2d);

@@ -1,5 +1,7 @@
-/build/*
-/nbproject/private/*
+# Git Ignore #
 
-*.xml
 *.properties
+*.xml
+
+build/
+nbproject/

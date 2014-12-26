@@ -25,9 +25,10 @@ public class Main_Game extends JGameModeX {
     }
     
     @Override
-    public void init() {
+    public boolean init() {
         hero = new JPictureSpriteX(holder.images.getDefaultImage(), holder.getDimensions().getCenterX(), holder.getDimensions().getCenterY());
         holder.spriteholder.addImage("bullet", "/resources/bullet.png");
+        return true;
     }
     
     @Override

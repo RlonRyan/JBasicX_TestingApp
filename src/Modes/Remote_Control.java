@@ -11,9 +11,7 @@ import JNetX.JClientX;
 import JNetX.JPacketX.JPackectX;
 import JNetX.JPacketX.JPacketFieldX;
 import JNetX.JPacketX.JPacketTypeX;
-import JSpriteX.JPictureSpriteX;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -32,13 +30,15 @@ public class Remote_Control extends JGameModeX {
     }
 
     @Override
-    public void init() {
+    public boolean init() {
         try {
-            client = new JClientX("rlonryan.selfip.com", 7654);
+            client = new JClientX("127.0.0.1", 7654);
         } catch (IOException e) {
             Logger.getLogger(this.name).log(Level.SEVERE, "Unable to create client connection endpoint!");
-            System.exit(0);
+            return false;
         }
+        
+        return true;
     }
 
     @Override
@@ -49,11 +49,17 @@ public class Remote_Control extends JGameModeX {
             p.set(JPacketFieldX.KEY, JPackectX.toBytes(((KeyEvent) e).getKeyCode()));
             client.sendPacket(p);
         });
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, (e) -> {
+            JPackectX p = new JPackectX(JPacketTypeX.UPDATE);
+            p.set(JPacketFieldX.MESSAGE, JPackectX.toBytes("Hello!"));
+            client.sendPacket(p);
+        });
     }
 
     @Override
     public void start() {
         // Nothing for now...
+        client.sendPacket(new JPackectX(JPacketTypeX.LOGON));
     }
 
     @Override
@@ -66,6 +72,7 @@ public class Remote_Control extends JGameModeX {
 
     @Override
     public void stop() {
+        client.sendPacket(new JPackectX(JPacketTypeX.LOGOFF));
     }
 
     @Override
