@@ -92,10 +92,10 @@ public class Network_Controller extends JGameModeX {
 
     @Override
     public void registerBindings() {
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, (e) -> (menu.incrementHighlight()));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> (menu.deincrementHighlight()));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> (menu.selectMenuElement()));
-        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (menu.selectMenuElement(((MouseEvent) e).getPoint())));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, (e) -> menu.incrementHighlight());
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> menu.deincrementHighlight());
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> menu.selectMenuElement());
+        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> menu.selectMenuElement(((MouseEvent) e).getPoint()));
     }
 
     @Override

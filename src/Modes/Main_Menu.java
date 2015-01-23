@@ -45,13 +45,13 @@ public class Main_Menu extends JGameModeX {
 
     @Override
     public void registerBindings() {
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, (e) -> (menu.incrementHighlight()));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> (menu.deincrementHighlight()));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> (menu.selectMenuElement()));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (System.exit(0)));
-        bindings.bind(KeyEvent.KEY_PRESSED, (e) -> (System.out.println("Keypress: " + KeyEvent.getKeyText(((KeyEvent) e).getKeyCode()) + " detected with lambda!")));
-        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (menu.selectMenuElement(((MouseEvent) e).getPoint())));
-        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> (System.out.println("Mousepress!")));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_DOWN, (e) -> menu.incrementHighlight());
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_UP, (e) -> menu.deincrementHighlight());
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ENTER, (e) -> menu.selectMenuElement());
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> System.exit(0));
+        //bindings.bind(KeyEvent.KEY_PRESSED, (e) -> System.out.println("Keypress: " + KeyEvent.getKeyText(((KeyEvent) e).getKeyCode()) + " detected with lambda!"));
+        bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> menu.selectMenuElement(((MouseEvent) e).getPoint()));
+        //bindings.bind(MouseEvent.MOUSE_CLICKED, (e) -> System.out.println("Mousepress!"));
 
         //Hackish... But nessacary.
         if (!this.holder.hasGameMode("network_controller")) {

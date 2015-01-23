@@ -1,7 +1,12 @@
-# Git Ignore #
+####################
+# GitIgnore
+####################
+private.xml
+private.properties
 
-*.properties
-*.xml
+/nbproject/
+/build/
+/dist/
+/.gradle/
 
-build/
-nbproject/
+*.lock

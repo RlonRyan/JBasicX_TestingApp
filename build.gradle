@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'TestingApp.JBasicX_TestingApp'
+
+jar {
+    baseName = 'JBasicX-TestingApp'
+    version =  '0.1.0'
+    manifest {
+        attributes("Implementation-Title": "Gradle",
+                   "Main-Class": "TestingApp.JBasicX_TestingApp",
+                   "Implementation-Version": version)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+	resources {
+            srcDir 'src/Resources'
+        }
+    }
+}
+
+dependencies {
+    compile project(':lib/JBasicX')
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+}

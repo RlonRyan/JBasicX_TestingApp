@@ -37,13 +37,13 @@ public class Remote_Control extends JGameModeX {
             Logger.getLogger(this.name).log(Level.SEVERE, "Unable to create client connection endpoint!");
             return false;
         }
-        
+
         return true;
     }
 
     @Override
     public void registerBindings() {
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> (holder.setGameMode("pause_menu")));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> holder.setGameMode("pause_menu"));
         bindings.bind(KeyEvent.KEY_PRESSED, (e) -> {
             JPackectX p = new JPackectX(JPacketTypeX.UPDATE);
             p.set(JPacketFieldX.KEY, JPackectX.toBytes(((KeyEvent) e).getKeyCode()));
