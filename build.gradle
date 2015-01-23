@@ -2,8 +2,10 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 mainClassName = 'TestingApp.JBasicX_TestingApp'
+applicationDefaultJvmArgs = ["-Dgreeting.language=en"]
 
 jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     baseName = 'JBasicX-TestingApp'
     version =  '0.1.0'
     manifest {
@@ -19,13 +21,21 @@ sourceSets {
             srcDir 'src'
         }
 	resources {
-            srcDir 'src/Resources'
+            srcDir 'src'
         }
     }
 }
 
 dependencies {
     compile project(':lib/JBasicX')
+}
+
+gradle.buildFinished {
+    copy {
+        from "${buildDir}/libs"
+        into "${projectDir}/dist"
+    }
+    clean
 }
 
 task wrapper(type: Wrapper) {
