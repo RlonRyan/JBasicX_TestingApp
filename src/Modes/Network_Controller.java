@@ -31,6 +31,7 @@ public class Network_Controller extends JGameModeX {
     private JMenuX menu;
     private JHostX host;
     public JPictureSpriteX hero;
+    public JSpriteHolderX spriteholder;
 
     public Network_Controller(JGameEngineX holder) {
 
@@ -41,7 +42,10 @@ public class Network_Controller extends JGameModeX {
     @Override
     public boolean init() {
         hero = new JPictureSpriteX(holder.images.getDefaultImage(), holder.getDimensions().getCenterX(), holder.getDimensions().getCenterY());
-        holder.spriteholder.addImage("bullet", "/resources/bullet.png");
+
+        spriteholder = new JSpriteHolderX(holder);
+        spriteholder.addImage("bullet", "/resources/bullet.png");
+
         menu = new JMenuX("Network", 160, 120, 320, 240);
         menu.addMenuElement(new JMenuTextElementX("Back", () -> (holder.setGameMode("main_menu"))));
         if (this.host == null) {
@@ -54,7 +58,7 @@ public class Network_Controller extends JGameModeX {
                 });
                 this.host.bindings.bind(JPacketTypeX.UPDATE, (p) -> {
                     if (p.hasField(JPacketFieldX.XPOS) && p.hasField(JPacketFieldX.YPOS)) {
-                        this.holder.spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, JPackectX.getIntFromBytes(p.get(JPacketFieldX.XPOS)), JPackectX.getIntFromBytes(p.get(JPacketFieldX.YPOS)));
+                        this.spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, JPackectX.getIntFromBytes(p.get(JPacketFieldX.XPOS)), JPackectX.getIntFromBytes(p.get(JPacketFieldX.YPOS)));
                     }
                     if (p.hasField(JPacketFieldX.KEY)) {
                         int key = JPackectX.getIntFromBytes(p.get(JPacketFieldX.KEY));
@@ -123,7 +127,7 @@ public class Network_Controller extends JGameModeX {
 
     @Override
     public void paint(Graphics2D g2d) {
-        holder.spriteholder.paintSprites(g2d);
+        spriteholder.paintSprites(g2d);
         holder.resetGraphics();
         menu.paint(g2d);
         hero.paint(g2d);
@@ -131,7 +135,7 @@ public class Network_Controller extends JGameModeX {
 
     @Override
     public void paintGameData(Graphics2D g2d) {
-        holder.spriteholder.paintSpriteBounds(g2d);
+        spriteholder.paintSpriteBounds(g2d);
         holder.resetGraphics();
         menu.paintBounds(g2d);
         hero.paintBounds(g2d);

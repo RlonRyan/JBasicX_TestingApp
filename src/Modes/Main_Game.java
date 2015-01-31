@@ -20,6 +20,7 @@ import java.awt.event.KeyEvent;
 public class Main_Game extends JGameModeX {
 
     public JPictureSpriteX hero;
+    public JSpriteHolderX spriteholder;
 
     public Main_Game(JGameEngineX holder) {
         super("Main_Game", holder);
@@ -28,20 +29,21 @@ public class Main_Game extends JGameModeX {
     @Override
     public boolean init() {
         hero = new JPictureSpriteX(holder.images.getDefaultImage(), holder.getDimensions().getCenterX(), holder.getDimensions().getCenterY());
-        holder.spriteholder.addImage("bullet", "/resources/bullet.png");
+        spriteholder = new JSpriteHolderX(holder);
+        spriteholder.addImage("bullet", "/resources/bullet.png");
         return true;
     }
 
     @Override
     public void registerBindings() {
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> holder.setGameMode("pause_menu"));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, (e) -> holder.spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, hero.getDirection(), hero.getVel() + 100, hero.getBounds().getCenterX(), hero.getBounds().getCenterY(), "bullet"));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, (e) -> spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, hero.getDirection(), hero.getDirection() - 90, hero.getVel() + 100, hero.getBounds().getCenterX(), hero.getBounds().getCenterY(), "bullet"));
     }
 
     @Override
     public void start() {
-        // Nothing for now...
-        holder.spriteholder.start();
+        // Start the spriteholder
+        spriteholder.start();
     }
 
     @Override
@@ -58,27 +60,25 @@ public class Main_Game extends JGameModeX {
 
     @Override
     public void pause() {
-
         hero.pause();
-        holder.spriteholder.pauseAll();
+        spriteholder.pauseAll();
     }
 
     @Override
     public void stop() {
         hero.pause();
-        holder.spriteholder.pauseAll();
+        spriteholder.pauseAll();
     }
 
     @Override
     public void paint(Graphics2D g2d) {
-        holder.spriteholder.paintSprites(g2d);
+        spriteholder.paintSprites(g2d);
         hero.paint(g2d);
-
     }
 
     @Override
     public void paintGameData(Graphics2D g2d) {
-        holder.spriteholder.paintSpriteBounds(g2d);
+        spriteholder.paintSpriteBounds(g2d);
         hero.paintBounds(g2d);
     }
 

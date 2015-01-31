@@ -11,3 +11,4 @@ private.properties
 /src/.gradle/*
 
 *.lock
+/.nb-gradle/private/
