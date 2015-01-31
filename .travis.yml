@@ -23,7 +23,7 @@ deploy:
   api_key: $GITPERM
   file:
   - README.md
-  - build/libs/JBasicX-TestingApp-0.1.0.zip
+  - build/libs/JBasicX-TestingApp-0.1.0.jar
   on:
     tags: false
     all_branches: true
