@@ -4,11 +4,10 @@
 private.xml
 private.properties
 
-/nbproject/*
+/.nb-gradle/*
 /build/*
 /dist/*
 /.gradle/*
 /src/.gradle/*
 
 *.lock
-/.nb-gradle/private/
