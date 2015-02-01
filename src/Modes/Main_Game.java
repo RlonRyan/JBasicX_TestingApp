@@ -30,7 +30,7 @@ public class Main_Game extends JGameModeX {
     public boolean init() {
         hero = new JPictureSpriteX(holder.images.getDefaultImage(), holder.getDimensions().getCenterX(), holder.getDimensions().getCenterY());
         spriteholder = new JSpriteHolderX(holder);
-        spriteholder.addImage("bullet", "/resources/bullet.png");
+        spriteholder.addImage("bullet", "/Resources/bullet.png");
         return true;
     }
 
@@ -38,6 +38,7 @@ public class Main_Game extends JGameModeX {
     public void registerBindings() {
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> holder.setGameMode("pause_menu"));
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, (e) -> spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, hero.getDirection(), hero.getDirection() - 90, hero.getVel() + 100, hero.getBounds().getCenterX(), hero.getBounds().getCenterY(), "bullet"));
+        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_B, (e) -> spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, (int) (Math.random() * 360), Math.random() * 100, hero.getX(), hero.getY()));
     }
 
     @Override
