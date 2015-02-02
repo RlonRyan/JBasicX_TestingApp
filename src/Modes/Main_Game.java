@@ -30,7 +30,7 @@ public class Main_Game extends JGameModeX {
     public boolean init() {
         hero = new JPictureSpriteX(holder.images.getDefaultImage(), holder.getDimensions().getCenterX(), holder.getDimensions().getCenterY());
         spriteholder = new JSpriteHolderX(holder);
-        spriteholder.addImage("bullet", "/Resources/bullet.png");
+        spriteholder.addImage("bullet", "/Resources/Bullet.png"); // Something odd is going on here with the distros...
         return true;
     }
 
@@ -63,12 +63,14 @@ public class Main_Game extends JGameModeX {
     public void pause() {
         hero.pause();
         spriteholder.pauseAll();
+        spriteholder.stop(); // Again... odd...
     }
 
     @Override
     public void stop() {
         hero.pause();
         spriteholder.pauseAll();
+        spriteholder.stop(); // Again... odd...
     }
 
     @Override

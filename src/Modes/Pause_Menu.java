@@ -29,7 +29,7 @@ public class Pause_Menu extends JGameModeX {
 
     @Override
     public boolean init() {
-        menu = new JMenuX("Pause Menu", 160, 120, 320, 240);
+        menu = new JMenuX("Pause Menu", 160, 120, 320, 240); // Alpha seems too high... or low... whatever is too transparent...
         menu.addMenuElement(new JMenuTextElementX("Main Menu", () -> (holder.setGameMode("main_menu"))));
         menu.addMenuElement(new JMenuTextElementX("Toggle Game Data", () -> (holder.toggleGameDataVisable())));
         menu.addMenuElement(new JMenuTextElementX("Resume", () -> (holder.previousGameMode())));
@@ -70,6 +70,9 @@ public class Pause_Menu extends JGameModeX {
     @Override
     public void paint(Graphics2D g2d) {
         holder.getGameMode("main_game").paint(g2d);
+        if (holder.isGameDataVisible()) {
+            holder.getGameMode("main_game").paintGameData(g2d); // Manual workaround for layering issue...
+        }
         holder.resetGraphics();
         menu.paint(g2d);
     }
