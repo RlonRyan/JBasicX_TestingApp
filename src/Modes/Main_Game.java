@@ -37,7 +37,18 @@ public class Main_Game extends JGameModeX {
     @Override
     public void registerBindings() {
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_ESCAPE, (e) -> holder.setGameMode("pause_menu"));
-        bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE, (e) -> spriteholder.addSprite(JSpriteHolderX.SPRITE_BASIC, hero.getDirection(), hero.getDirection() - 90, hero.getVel() + 100, hero.getBounds().getCenterX(), hero.getBounds().getCenterY(), "bullet"));
+        bindings.bind(
+                KeyEvent.KEY_PRESSED, KeyEvent.VK_SPACE,
+                (e) -> spriteholder.addSprite(
+                        JSpriteHolderX.SPRITE_BASIC,
+                        hero.getDirection(),
+                        hero.getDirection() - 90,
+                        hero.getVel() + 100,
+                        hero.getBounds().getCenterX() - (spriteholder.getImage("bullet").getWidth() / 2),
+                        hero.getBounds().getCenterY() - (spriteholder.getImage("bullet").getHeight() / 2),
+                        "bullet"
+                )
+        );
         bindings.bind(KeyEvent.KEY_PRESSED, KeyEvent.VK_B, (e) -> spriteholder.addSprite(JSpriteHolderX.SPRITE_BOUNCER, (int) (Math.random() * 360), Math.random() * 100, hero.getX(), hero.getY()));
     }
 
@@ -56,7 +67,10 @@ public class Main_Game extends JGameModeX {
 
         this.hero.setVel(holder.mouse.getPosition().distance(new Point.Double(hero.getBounds().getCenterX(), hero.getBounds().getCenterY())) - hero.getRadius());
 
-        hero.update();
+        this.hero.update();
+
+        this.spriteholder.checkCollisionsAndRemove(JSpriteHolderX.SPRITE_BASIC, JSpriteHolderX.SPRITE_BOUNCER);
+
     }
 
     @Override
